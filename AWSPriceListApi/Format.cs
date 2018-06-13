@@ -3,7 +3,7 @@
     /// <summary>
     /// The available extensions for the offer files
     /// </summary>
-    public enum Extension
+    public enum Format
     {
         JSON,
         CSV

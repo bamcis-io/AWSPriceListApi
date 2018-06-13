@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BAMCIS.AWSPriceListApi
 {
+    /// <summary>
+    /// A client to interact with the AWS Price List API
+    /// </summary>
     public sealed class PriceListClient
     {
         #region Private Fields
@@ -19,25 +21,29 @@ namespace BAMCIS.AWSPriceListApi
 
         #endregion
 
-        #region Public Fields
-
-        public static readonly string DefaultOfferIndexFileUrl = "/offers/v1.0/aws/index.json";
-
-        #endregion
-
         #region Public Properties
 
+        /// <summary>
+        /// The client configuration
+        /// </summary>
         public PriceListClientConfig Config { get; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Creates a new price list client with the default configuration
+        /// </summary>
         public PriceListClient()
         {
             this.Config = new PriceListClientConfig();
         }
 
+        /// <summary>
+        /// Creates a new price list client with the provided configuration
+        /// </summary>
+        /// <param name="config"></param>
         public PriceListClient(PriceListClientConfig config)
         {
             this.Config = config ?? throw new ArgumentNullException("config");
@@ -51,9 +57,9 @@ namespace BAMCIS.AWSPriceListApi
         /// Gets the offer index file
         /// </summary>
         /// <returns></returns>
-        public async Task<OfferIndexFile> GetOfferIndexFileAsync()
+        public async Task<GetOfferIndexFileResponse> GetOfferIndexFileAsync()
         {
-            return await GetOfferIndexFileAsync(DefaultOfferIndexFileUrl);
+            return await GetOfferIndexFileAsync(new GetOfferIndexFileRequest());
         }
 
         /// <summary>
@@ -63,59 +69,104 @@ namespace BAMCIS.AWSPriceListApi
         /// The relative path of the offer index file, like "/offers/v1.0/aws/index.json"
         /// </param>
         /// <returns></returns>
-        public async Task<OfferIndexFile> GetOfferIndexFileAsync(string relativePath)
+        public async Task<GetOfferIndexFileResponse> GetOfferIndexFileAsync(GetOfferIndexFileRequest request)
         {
-            string Path = $"{this.Config.PriceListBaseUrl.Scheme}://{this.Config.PriceListBaseUrl.DnsSafeHost}{relativePath}";
+            if (this._IndexFile == null || this.Config.NoCache)
+            {
+                string Path = $"{this.Config.PriceListBaseUrl.Scheme}://{this.Config.PriceListBaseUrl.DnsSafeHost}{request.RelativePath}";
 
-            return await OfferIndexFile.GetAsync(Path);
+                try
+                {
+                    this._IndexFile = await OfferIndexFile.GetAsync(Path);
+                }
+                catch (PriceListException ex)
+                {
+                    return new GetOfferIndexFileResponse(ex.Message, ex.StatusCode);
+                }
+            }
+
+            return new GetOfferIndexFileResponse(this._IndexFile);
         }
 
         /// <summary>
         /// Lists the services that have price data available
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> ListServicesAsync()
+        public async Task<ListServicesResponse> ListServicesAsync()
         {
-            OfferIndexFile Index = await this.GetOfferIndexFileAsync();
+            return await ListServicesAsync(new ListServicesRequest());
+        }
 
-            return Index.Offers.Keys;
+        /// <summary>
+        /// Lists the services that have price data available
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ListServicesResponse> ListServicesAsync(ListServicesRequest request)
+        {
+            if (this._IndexFile == null || this.Config.NoCache)
+            {
+                GetOfferIndexFileResponse Response = await this.GetOfferIndexFileAsync();
+
+                if (!Response.IsError)
+                {
+                    this._IndexFile = Response.OfferIndexFile;
+                }
+                else
+                {
+                    throw new PriceListException(Response.Reason, Response.StatusCode);
+                }
+            }
+
+            return new ListServicesResponse(this._IndexFile.Offers.Keys);
         }
 
         /// <summary>
         /// Gets price data for a specified product
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="product">The product to get price data for</param>
         /// <returns></returns>
-        public async Task<string> GetProductAsync(string product)
+        public async Task<GetProductResponse> GetProductAsync(GetProductRequest request)
         {
-            if (this._IndexFile == null)
+            if (this._IndexFile == null || this.Config.NoCache)
             {
-                this._IndexFile = await GetOfferIndexFileAsync();
+                GetOfferIndexFileResponse Response = await GetOfferIndexFileAsync();
+
+                if (!Response.IsError)
+                {
+                    this._IndexFile = Response.OfferIndexFile;
+                }
+                else
+                {
+                    throw new PriceListException(Response.Reason, Response.StatusCode)
+                    {
+                        Reason = Response.Reason
+                    };
+                }
             }
 
             IEnumerable<KeyValuePair<string, Offer>> Offers = this._IndexFile.Offers.Where(
-                x => x.Key.Equals(product, StringComparison.OrdinalIgnoreCase)
+                x => x.Key.Equals(request.Product, StringComparison.OrdinalIgnoreCase)
             );
 
             if (Offers.Any())
             {
                 string Path = $"{this.Config.PriceListBaseUrl.Scheme}://{this.Config.PriceListBaseUrl.DnsSafeHost}{Offers.First().Value.CurrentVersionUrl}";
 
-                switch (this.Config.Extension)
+                switch (request.Format)
                 {
-                    case Extension.CSV:
+                    case Format.CSV:
                         {
                             Path = System.IO.Path.ChangeExtension(Path, "csv");
                             break;
                         }
-                    case Extension.JSON:
+                    case Format.JSON:
                         {
                             Path = System.IO.Path.ChangeExtension(Path, "json");
                             break;
                         }
                     default:
                         {
-                            throw new ArgumentException($"Unknown extension: {this.Config.Extension.ToString()}.");
+                            throw new ArgumentException($"Unknown format: {request.Format.ToString()}.");
                         }
                 }
 
@@ -123,16 +174,20 @@ namespace BAMCIS.AWSPriceListApi
 
                 if (Response.IsSuccessStatusCode)
                 {
-                    return await Response.Content.ReadAsStringAsync();
+                    return new GetProductResponse(Response, request.Format);                        
                 }
                 else
                 {
-                    throw new HttpRequestException($"{(int)Response.StatusCode} {Response.ReasonPhrase} : {await Response.Content.ReadAsStringAsync()}");
+                    throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                    {
+                        Reason = Response.ReasonPhrase,
+                        Request = Response.RequestMessage
+                    };
                 }
             }
             else
             {
-                throw new ArgumentException($"No product found matching {product}.");
+                throw new ArgumentException($"No product found matching {request.Product}.");
             }
         }
 

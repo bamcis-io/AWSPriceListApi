@@ -19,28 +19,28 @@ namespace AWSPriceListApi.Tests
             PriceListClient Client = new PriceListClient();
 
             // ACT
-            IEnumerable<string> Services = await Client.ListServicesAsync();
+            ListServicesResponse Services = await Client.ListServicesAsync();
 
             // ASSERT
-            Assert.True(Services.Any());
+            Assert.True(!Services.IsError);
+            Assert.True(Services.Services.Any());
         }
 
         [Fact]
         public async Task PrictListProductTestCsv()
         {
             // ARRANGE
-            PriceListClientConfig Config = new PriceListClientConfig()
-            {
-                Extension = Extension.CSV
-            };
+            PriceListClientConfig Config = new PriceListClientConfig();
 
             PriceListClient Client = new PriceListClient(Config);
 
+            GetProductRequest Request = new GetProductRequest("AmazonRDS");
+
             // ACT
-            string Content = await Client.GetProductAsync("AmazonRDS");
+            GetProductResponse Response = await Client.GetProductAsync(Request);
 
             // ASSERT
-            Assert.True(!String.IsNullOrEmpty(Content));
+            Assert.True(!String.IsNullOrEmpty(Response.Product));
         }
 
         [Fact]
@@ -48,12 +48,14 @@ namespace AWSPriceListApi.Tests
         {
             // ARRANGE
             PriceListClient Client = new PriceListClient();
+            GetProductRequest Request = new GetProductRequest("AmazonRDS");
 
             // ACT
-            string Content = await Client.GetProductAsync("AmazonRDS");
+            GetProductResponse Response = await Client.GetProductAsync(Request);
 
             // ASSERT
-            Assert.True(!String.IsNullOrEmpty(Content));
+            Assert.True(!Response.IsError);
+            Assert.True(!String.IsNullOrEmpty(Response.Product));
         }
 
         [Fact]
@@ -63,10 +65,11 @@ namespace AWSPriceListApi.Tests
             PriceListClient Client = new PriceListClient();
 
             // ACT
-            OfferIndexFile Index = await Client.GetOfferIndexFileAsync();
+            GetOfferIndexFileResponse Response = await Client.GetOfferIndexFileAsync();
 
             // ASSERT
-            Assert.NotNull(Index);
+            Assert.True(!Response.IsError);
+            Assert.NotNull(Response.OfferIndexFile);
         }
 
         [Fact]
@@ -74,12 +77,14 @@ namespace AWSPriceListApi.Tests
         {
             // ARRANGE
             PriceListClient Client = new PriceListClient();
+            GetOfferIndexFileRequest Request = new GetOfferIndexFileRequest("/offers/v1.0/aws/index.json");
 
             // ACT
-            OfferIndexFile Index = await Client.GetOfferIndexFileAsync(PriceListClient.DefaultOfferIndexFileUrl);
+            GetOfferIndexFileResponse Response = await Client.GetOfferIndexFileAsync(Request);
 
             // ASSERT
-            Assert.NotNull(Index);
+            Assert.True(!Response.IsError);
+            Assert.NotNull(Response.OfferIndexFile);
         }
 
         [Fact]

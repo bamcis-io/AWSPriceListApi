@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace BAMCIS.AWSPriceListApi
@@ -16,6 +15,8 @@ namespace BAMCIS.AWSPriceListApi
         private static HttpClientHandler _Handler = new HttpClientHandler();
 
         private static HttpClient _Client = new HttpClient(_Handler);
+
+        private static readonly Uri _PriceListBaseUrl = new Uri("https://pricing.us-east-1.amazonaws.com");
 
         #endregion
 
@@ -78,7 +79,7 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (!String.IsNullOrEmpty(this.CurrentRegionIndexUrl))
             {
-                string Path = $"{OfferIndexFile.PriceListBaseUrl.Scheme}://{OfferIndexFile.PriceListBaseUrl.DnsSafeHost}{this.CurrentRegionIndexUrl}";
+                string Path = $"{_PriceListBaseUrl.Scheme}://{_PriceListBaseUrl.DnsSafeHost}{this.CurrentRegionIndexUrl}";
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 
@@ -108,7 +109,7 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (!String.IsNullOrEmpty(this.VersionIndexUrl))
             {
-                string Path = $"{OfferIndexFile.PriceListBaseUrl.Scheme}://{OfferIndexFile.PriceListBaseUrl.DnsSafeHost}{this.VersionIndexUrl}";
+                string Path = $"{_PriceListBaseUrl.Scheme}://{_PriceListBaseUrl.DnsSafeHost}{this.VersionIndexUrl}";
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 

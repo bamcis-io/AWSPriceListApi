@@ -12,9 +12,17 @@ namespace BAMCIS.AWSPriceListApi
 
         #region Public Properties
 
-        public Extension Extension { get; set; }
-
+        /// <summary>
+        /// The base url to the price list api, do not include
+        /// any path information
+        /// </summary>
         public Uri PriceListBaseUrl { get; set; }
+
+        /// <summary>
+        /// If set to true, the client will not cache results of the offer index
+        /// file
+        /// </summary>
+        public bool NoCache { get; set; }
 
         #endregion
 
@@ -25,7 +33,6 @@ namespace BAMCIS.AWSPriceListApi
         /// </summary>
         public PriceListClientConfig()
         {
-            this.Extension = Extension.JSON;
             this.PriceListBaseUrl = _PriceListBaseUrlDefault;
         }
 

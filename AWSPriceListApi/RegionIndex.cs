@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace BAMCIS.AWSPriceListApi
 {
+    /// <summary>
+    /// The region offer index data
+    /// </summary>
     public sealed class RegionIndex
     {
         #region Public Properties

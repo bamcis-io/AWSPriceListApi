@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BAMCIS.AWSPriceListApi
 {
+    /// <summary>
+    /// Represents the contents of an offer index file
+    /// </summary>
     public class OfferIndexFile
     {
         #region Private Fields
@@ -17,8 +20,6 @@ namespace BAMCIS.AWSPriceListApi
         #endregion
 
         #region Public Fields
-
-        public static readonly Uri PriceListBaseUrl = new Uri("https://pricing.us-east-1.amazonaws.com");
 
         public static readonly Uri OfferIndexFileUrl = new Uri("https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json");
 
@@ -104,19 +105,24 @@ namespace BAMCIS.AWSPriceListApi
                 throw new ArgumentNullException("url");
             }
 
-            string Content = await _Client.GetStringAsync(url);
+            HttpResponseMessage Response = await _Client.GetAsync(url);
 
-            return JsonConvert.DeserializeObject<OfferIndexFile>(Content);
+            if (Response.IsSuccessStatusCode)
+            {
+                string Content = await Response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<OfferIndexFile>(Content);
+            }
+            else
+            {
+                throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                {
+                    Reason = Response.ReasonPhrase,
+                    Request = Response.RequestMessage
+                };
+            }
+            
         }
-
-        /// <summary>
-        /// Gets the default offer index file url
-        /// </summary>
-        /// <returns></returns>
-        public static Uri GetOfferIndexFileUrl()
-        {
-            return OfferIndexFileUrl;
-        }
+        
         #endregion
     }
 }

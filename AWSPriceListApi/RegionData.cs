@@ -10,8 +10,14 @@ namespace BAMCIS.AWSPriceListApi
     {
         #region Public Properties
 
+        /// <summary>
+        /// The region code, like us-east-1
+        /// </summary>
         public string RegionCode { get; }
 
+        /// <summary>
+        /// The url to the current version of the offer index file for this region
+        /// </summary>
         public string CurrentVersionUrl { get; }
 
         #endregion
@@ -40,11 +46,6 @@ namespace BAMCIS.AWSPriceListApi
             this.CurrentVersionUrl = currentVersionUrl;
         }
 
-        #endregion
-
-        #region Public Methods
-
-      
         #endregion
     }
 }

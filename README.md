@@ -64,5 +64,8 @@ offer index file.
 
 ## Revision History
 
+### 2.0.0
+Wrapped all request and response for the client in their own classes.
+
 ### 1.0.0
 Initial release of the application.
