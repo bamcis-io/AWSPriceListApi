@@ -8,8 +8,13 @@
     <Description>Provides implementations for the AWS Price List API.</Description>
     <PackageTags>AWS PriceList Lambda</PackageTags>
     <RepositoryType>Git</RepositoryType>
-    <PackageProjectUrl>http://github.com/bamcis-io/AWSPriceListApi</PackageProjectUrl>
-    <RepositoryUrl>http://github.com/bamcis-io/AWSPriceListApi</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/bamcis-io/AWSPriceListApi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bamcis-io/AWSPriceListApi</RepositoryUrl>
+    <Copyright>bamcis.io</Copyright>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/bamcis-io/AWSPriceListApi/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

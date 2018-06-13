@@ -41,8 +41,6 @@ namespace AWSPriceListApi.Tests
 
             // ASSERT
             Assert.True(!String.IsNullOrEmpty(Content));
-
-            System.IO.File.WriteAllText("d:\\users\\mhaken\\desktop\\rds.csv", Content);
         }
 
         [Fact]
