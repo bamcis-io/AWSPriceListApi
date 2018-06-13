@@ -17,16 +17,18 @@ index file in case you want to get the URLs for those specific offer files.
 
 Here's an example of some usage:
 
-    PriceListClientConfig Config = new PriceListClientConfig()
-    {
-        Extension = Extension.CSV
-    };
+    PriceListClientConfig Config = new PriceListClientConfig();
 
     PriceListClient Client = new PriceListClient(Config);
 
-    string Content = await Client.GetProductAsync("AmazonRDS");
+    GetProductRequest Request = new GetProductRequest("AmazonRDS")
+    {
+        Format = Format.CSV
+    };
 
-    System.IO.File.WriteAllText("c:\\users\\me\\desktop\\rds.csv", Content);
+    GetProductResponse Response = await Client.GetProductAsync(Request);
+
+    System.IO.File.WriteAllText("c:\\users\\me\\desktop\\rds.csv", Response.Product);
 
 This set of commands gets the pricing information for RDS and writes the CSV content to a file.
 
@@ -52,12 +54,14 @@ defined in the offer index file.
 You could have also used the `PriceListClient` to do the same thing.
 
     PriceListClient Client = new PriceListClient();
-	OfferIndexFile File = await Client.GetOfferIndexFileAsync();
+	GetOfferIndexFileResponse Response = await Client.GetOfferIndexFileAsync();
+	OfferIndexFile File = Response.OfferIndexFile;
 
 ### Listing Services
 
     PriceListClient Client = new PriceListClient();
-    IEnumerable<string> Services = await Client.ListServicesAsync();
+    ListServicesResponse Response = await Client.ListServicesAsync();
+	IEnumerable<string> Services = Response.Services;
 
 This provides a list of all services that have pricing data available in the
 offer index file.

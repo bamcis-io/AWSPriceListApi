@@ -34,7 +34,10 @@ namespace AWSPriceListApi.Tests
 
             PriceListClient Client = new PriceListClient(Config);
 
-            GetProductRequest Request = new GetProductRequest("AmazonRDS");
+            GetProductRequest Request = new GetProductRequest("AmazonRDS")
+            {
+                Format = Format.CSV
+            };
 
             // ACT
             GetProductResponse Response = await Client.GetProductAsync(Request);
