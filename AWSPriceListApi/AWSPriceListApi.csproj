@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>BAMCIS.AWSPriceListApi</RootNamespace>
+    <Authors>Michael Haken</Authors>
+    <Company>bamcis.io</Company>
+    <Description>Provides implementations for the AWS Price List API.</Description>
+    <PackageTags>AWS PriceList Lambda</PackageTags>
+    <RepositoryType>Git</RepositoryType>
+    <PackageProjectUrl>http://github.com/bamcis-io/AWSPriceListApi</PackageProjectUrl>
+    <RepositoryUrl>http://github.com/bamcis-io/AWSPriceListApi</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+</Project>
