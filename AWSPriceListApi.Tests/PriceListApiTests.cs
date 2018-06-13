@@ -13,6 +13,19 @@ namespace AWSPriceListApi.Tests
     public class PriceListApiTests
     {
         [Fact]
+        public async Task ListServicesTest()
+        {
+            // ARRANGE
+            PriceListClient Client = new PriceListClient();
+
+            // ACT
+            IEnumerable<string> Services = await Client.ListServicesAsync();
+
+            // ASSERT
+            Assert.True(Services.Any());
+        }
+
+        [Fact]
         public async Task PrictListProductTestCsv()
         {
             // ARRANGE
