@@ -68,6 +68,12 @@ offer index file.
 
 ## Revision History
 
+### 2.1.2
+Added disposing for http response messages.
+
+### 2.1.1
+Internal changes to handling URLs.
+
 ### 2.1.0
 Updated GetProductRequest properties.
 
