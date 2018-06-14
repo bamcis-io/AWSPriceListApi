@@ -17,9 +17,14 @@ namespace BAMCIS.AWSPriceListApi
         public HttpStatusCode StatusCode { get; }
 
         /// <summary>
+        /// The product that was requested
+        /// </summary>
+        public string ServiceCode { get; }
+
+        /// <summary>
         /// The content of the product pricing information
         /// </summary>
-        public string Product { get; }
+        public string ProductInfo { get; }
 
         /// <summary>
         /// The format of the data
@@ -45,20 +50,21 @@ namespace BAMCIS.AWSPriceListApi
         /// </summary>
         /// <param name="response"></param>
         /// <param name="format"></param>
-        internal GetProductResponse(HttpResponseMessage response, Format format)
+        internal GetProductResponse(HttpResponseMessage response, GetProductRequest request)
         {
             this.StatusCode = response.StatusCode;           
-            this.Format = format;
+            this.Format = request.Format;
+            this.ServiceCode = request.ServiceCode;
             this.IsError = !response.IsSuccessStatusCode;
 
             if (this.IsError)
             {
                 this.Reason = response.Content.ReadAsStringAsync().Result;
-                this.Product = String.Empty;
+                this.ProductInfo = String.Empty;
             }
             else
             {
-                this.Product = response.Content.ReadAsStringAsync().Result;
+                this.ProductInfo = response.Content.ReadAsStringAsync().Result;
                 this.Reason = String.Empty;
             }
         }

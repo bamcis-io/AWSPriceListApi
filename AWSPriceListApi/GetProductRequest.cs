@@ -12,7 +12,7 @@ namespace BAMCIS.AWSPriceListApi
         /// <summary>
         /// The product to retrieve pricing data for
         /// </summary>
-        public string Product { get; }
+        public string ServiceCode { get; }
 
         /// <summary>
         /// The relative path to the offer file for the product
@@ -39,7 +39,7 @@ namespace BAMCIS.AWSPriceListApi
                 throw new ArgumentNullException("product");
             }
 
-            this.Product = product;
+            this.ServiceCode = product;
             this.Format = Format.JSON;
             this.RelativePath = String.Empty;
         }

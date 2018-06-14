@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace BAMCIS.AWSPriceListApi
 {
@@ -6,7 +7,7 @@ namespace BAMCIS.AWSPriceListApi
     {
         #region Private Fields
 
-        private static readonly Uri _PriceListBaseUrlDefault = new Uri("https://pricing.us-east-1.amazonaws.com");
+        internal static readonly Uri _PriceListBaseUrlDefault = new Uri("https://pricing.us-east-1.amazonaws.com");
 
         #endregion
 
@@ -34,6 +35,28 @@ namespace BAMCIS.AWSPriceListApi
         public PriceListClientConfig()
         {
             this.PriceListBaseUrl = _PriceListBaseUrlDefault;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        internal string GetBaseUrlString()
+        {
+            return GetBaseUrlString(this.PriceListBaseUrl);
+        }
+
+        internal static string GetBaseUrlString(Uri baseUrl)
+        {
+            StringBuilder Base = new StringBuilder($"{baseUrl.Scheme}://{baseUrl.DnsSafeHost}");
+
+            if (baseUrl.Scheme == "http" && baseUrl.Port != 80 ||
+                baseUrl.Scheme == "https" && baseUrl.Port != 443)
+            {
+                Base.Append($":{baseUrl.Port}");
+            }
+
+            return Base.ToString();
         }
 
         #endregion

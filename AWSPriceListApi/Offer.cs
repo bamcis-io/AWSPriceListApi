@@ -16,8 +16,6 @@ namespace BAMCIS.AWSPriceListApi
 
         private static HttpClient _Client = new HttpClient(_Handler);
 
-        private static readonly Uri _PriceListBaseUrl = new Uri("https://pricing.us-east-1.amazonaws.com");
-
         #endregion
 
         #region Public Properties
@@ -79,7 +77,7 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (!String.IsNullOrEmpty(this.CurrentRegionIndexUrl))
             {
-                string Path = $"{_PriceListBaseUrl.Scheme}://{_PriceListBaseUrl.DnsSafeHost}{this.CurrentRegionIndexUrl}";
+                string Path = $"{PriceListClientConfig.GetBaseUrlString(PriceListClientConfig._PriceListBaseUrlDefault)}{this.CurrentRegionIndexUrl}";
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 
@@ -109,7 +107,7 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (!String.IsNullOrEmpty(this.VersionIndexUrl))
             {
-                string Path = $"{_PriceListBaseUrl.Scheme}://{_PriceListBaseUrl.DnsSafeHost}{this.VersionIndexUrl}";
+                string Path = $"{PriceListClientConfig.GetBaseUrlString(PriceListClientConfig._PriceListBaseUrlDefault)}{this.VersionIndexUrl}";
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 

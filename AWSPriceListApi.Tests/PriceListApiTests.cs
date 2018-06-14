@@ -43,7 +43,7 @@ namespace AWSPriceListApi.Tests
             GetProductResponse Response = await Client.GetProductAsync(Request);
 
             // ASSERT
-            Assert.True(!String.IsNullOrEmpty(Response.Product));
+            Assert.True(!String.IsNullOrEmpty(Response.ServiceCode));
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace AWSPriceListApi.Tests
 
             // ASSERT
             Assert.True(!Response.IsError);
-            Assert.True(!String.IsNullOrEmpty(Response.Product));
+            Assert.True(!String.IsNullOrEmpty(Response.ServiceCode));
         }
 
         [Fact]

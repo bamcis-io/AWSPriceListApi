@@ -73,7 +73,7 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (this._IndexFile == null || this.Config.NoCache)
             {
-                string Path = $"{this.Config.PriceListBaseUrl.Scheme}://{this.Config.PriceListBaseUrl.DnsSafeHost}{request.RelativePath}";
+                string Path = $"{this.Config.GetBaseUrlString()}{request.RelativePath}";
 
                 try
                 {
@@ -145,12 +145,12 @@ namespace BAMCIS.AWSPriceListApi
             }
 
             IEnumerable<KeyValuePair<string, Offer>> Offers = this._IndexFile.Offers.Where(
-                x => x.Key.Equals(request.Product, StringComparison.OrdinalIgnoreCase)
+                x => x.Key.Equals(request.ServiceCode, StringComparison.OrdinalIgnoreCase)
             );
 
             if (Offers.Any())
             {
-                string Path = $"{this.Config.PriceListBaseUrl.Scheme}://{this.Config.PriceListBaseUrl.DnsSafeHost}{Offers.First().Value.CurrentVersionUrl}";
+                string Path = $"{this.Config.GetBaseUrlString()}{Offers.First().Value.CurrentVersionUrl}";
 
                 switch (request.Format)
                 {
@@ -174,7 +174,7 @@ namespace BAMCIS.AWSPriceListApi
 
                 if (Response.IsSuccessStatusCode)
                 {
-                    return new GetProductResponse(Response, request.Format);                        
+                    return new GetProductResponse(Response, request);                        
                 }
                 else
                 {
@@ -187,7 +187,7 @@ namespace BAMCIS.AWSPriceListApi
             }
             else
             {
-                throw new ArgumentException($"No product found matching {request.Product}.");
+                throw new ArgumentException($"No product found matching {request.ServiceCode}.");
             }
         }
 

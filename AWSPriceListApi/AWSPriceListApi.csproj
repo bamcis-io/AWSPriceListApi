@@ -15,7 +15,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.0.0</Version>
+    <Version>2.1.1</Version>
     <PackageReleaseNotes>Wrapped all requests and responses in their own classes.</PackageReleaseNotes>
   </PropertyGroup>
 
