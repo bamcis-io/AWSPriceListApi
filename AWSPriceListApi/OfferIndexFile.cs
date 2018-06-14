@@ -107,18 +107,25 @@ namespace BAMCIS.AWSPriceListApi
 
             HttpResponseMessage Response = await _Client.GetAsync(url);
 
-            if (Response.IsSuccessStatusCode)
+            try
             {
-                string Content = await Response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<OfferIndexFile>(Content);
-            }
-            else
-            {
-                throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                if (Response.IsSuccessStatusCode)
                 {
-                    Reason = Response.ReasonPhrase,
-                    Request = Response.RequestMessage
-                };
+                    string Content = await Response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<OfferIndexFile>(Content);
+                }
+                else
+                {
+                    throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                    {
+                        Reason = Response.ReasonPhrase,
+                        Request = Response.RequestMessage
+                    };
+                }
+            }
+            finally
+            {
+                Response.Dispose();
             }
             
         }

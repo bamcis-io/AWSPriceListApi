@@ -15,8 +15,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.1.1</Version>
-    <PackageReleaseNotes>Wrapped all requests and responses in their own classes.</PackageReleaseNotes>
+    <Version>2.1.2</Version>
+    <PackageReleaseNotes>Added disposing of http responses.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

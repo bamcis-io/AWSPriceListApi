@@ -81,13 +81,20 @@ namespace BAMCIS.AWSPriceListApi
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 
-                if (Response.IsSuccessStatusCode)
+                try
                 {
-                    return JsonConvert.DeserializeObject<RegionIndex>(await Response.Content.ReadAsStringAsync());
+                    if (Response.IsSuccessStatusCode)
+                    {
+                        return JsonConvert.DeserializeObject<RegionIndex>(await Response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        throw new HttpRequestException($"{Path} : {(int)Response.StatusCode} {Response.StatusCode} {Response.ReasonPhrase} : {await Response.Content.ReadAsStringAsync()}");
+                    }
                 }
-                else
+                finally
                 {
-                    throw new HttpRequestException($"{Path} : {(int)Response.StatusCode} {Response.StatusCode} {Response.ReasonPhrase} : {await Response.Content.ReadAsStringAsync()}");
+                    Response.Dispose();
                 }
             }
             else
@@ -111,13 +118,20 @@ namespace BAMCIS.AWSPriceListApi
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 
-                if (Response.IsSuccessStatusCode)
+                try
                 {
-                    return JsonConvert.DeserializeObject<VersionIndex>(await Response.Content.ReadAsStringAsync());
+                    if (Response.IsSuccessStatusCode)
+                    {
+                        return JsonConvert.DeserializeObject<VersionIndex>(await Response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        throw new HttpRequestException($"{Path} : {(int)Response.StatusCode} {Response.StatusCode} {Response.ReasonPhrase} : {await Response.Content.ReadAsStringAsync()}");
+                    }
                 }
-                else
+                finally
                 {
-                    throw new HttpRequestException($"{Path} : {(int)Response.StatusCode} {Response.StatusCode} {Response.ReasonPhrase} : {await Response.Content.ReadAsStringAsync()}");
+                    Response.Dispose();
                 }
             }
             else

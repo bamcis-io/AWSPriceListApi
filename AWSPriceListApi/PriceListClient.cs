@@ -172,17 +172,24 @@ namespace BAMCIS.AWSPriceListApi
 
                 HttpResponseMessage Response = await _Client.GetAsync(Path);
 
-                if (Response.IsSuccessStatusCode)
+                try
                 {
-                    return new GetProductResponse(Response, request);                        
-                }
-                else
-                {
-                    throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                    if (Response.IsSuccessStatusCode)
                     {
-                        Reason = Response.ReasonPhrase,
-                        Request = Response.RequestMessage
-                    };
+                        return new GetProductResponse(Response, request);
+                    }
+                    else
+                    {
+                        throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                        {
+                            Reason = Response.ReasonPhrase,
+                            Request = Response.RequestMessage
+                        };
+                    }
+                }
+                finally
+                {
+                    Response.Dispose();
                 }
             }
             else
