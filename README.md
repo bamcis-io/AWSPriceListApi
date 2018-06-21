@@ -29,7 +29,7 @@ Here's an example of some usage:
 
     GetProductResponse Response = await Client.GetProductAsync(Request);
 
-    System.IO.File.WriteAllText("c:\\users\\me\\desktop\\rds.csv", Response.Product);
+    System.IO.File.WriteAllText("c:\\users\\me\\desktop\\rds.csv", Response.ProductInfo);
 
 This set of commands gets the pricing information for RDS and writes the CSV content to a file.
 
@@ -83,12 +83,15 @@ a `GetProductResponse`. For example,
 
     GetProductResponse Response = await Client.GetProductAsync(Request);
 
-	ProductOffer RDSOffer = ProductOffer.FromJson(Response.Product);
+	ProductOffer RDSOffer = ProductOffer.FromJson(Response.ProductInfo);
   
 Now in the `RDSOffer` object you can explore the different pricing terms, dimensions in each term, and 
 the set of products in that offer. 
 
 ## Revision History
+
+### 2.2.1
+Fixed property name `ProductInfo`.
 
 ### 2.2.0
 Added deserialization classes for parsing the JSON for product offers.

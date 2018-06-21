@@ -24,7 +24,7 @@ namespace BAMCIS.AWSPriceListApi
         /// <summary>
         /// The content of the product pricing information
         /// </summary>
-        public string Product { get; }
+        public string ProductInfo { get; }
 
         /// <summary>
         /// The format of the data
@@ -60,11 +60,11 @@ namespace BAMCIS.AWSPriceListApi
             if (this.IsError)
             {
                 this.Reason = response.Content.ReadAsStringAsync().Result;
-                this.Product = String.Empty;
+                this.ProductInfo = String.Empty;
             }
             else
             {
-                this.Product = response.Content.ReadAsStringAsync().Result;
+                this.ProductInfo = response.Content.ReadAsStringAsync().Result;
                 this.Reason = String.Empty;
             }
         }

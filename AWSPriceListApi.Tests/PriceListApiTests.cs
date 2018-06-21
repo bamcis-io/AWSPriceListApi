@@ -27,7 +27,7 @@ namespace AWSPriceListApi.Tests
 
             GetProductResponse Response = await Client.GetProductAsync(Request);
 
-            string Json = Response.Product;
+            string Json = Response.ProductInfo;
 
             // ACT
             ProductOffer DDBOffer = ProductOffer.FromJson(Json);

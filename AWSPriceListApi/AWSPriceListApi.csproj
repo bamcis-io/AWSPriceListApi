@@ -15,8 +15,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.2.0</Version>
-    <PackageReleaseNotes>Added deserialization classes for parsing the JSON for product offers.</PackageReleaseNotes>
+    <Version>2.2.1</Version>
+    <PackageReleaseNotes>Fixed PropertyInfo property name.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
