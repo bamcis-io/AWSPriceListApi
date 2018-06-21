@@ -1,4 +1,6 @@
 using BAMCIS.AWSPriceListApi;
+using BAMCIS.AWSPriceListApi.Serde;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,6 +14,28 @@ namespace AWSPriceListApi.Tests
 {
     public class PriceListApiTests
     {
+        [Fact]
+        public async Task ParseJsonTest()
+        {
+            // ARRANGE
+            PriceListClient Client = new PriceListClient();
+
+            GetProductRequest Request = new GetProductRequest("AmazonDynamoDB")
+            {
+                Format = Format.JSON
+            };
+
+            GetProductResponse Response = await Client.GetProductAsync(Request);
+
+            string Json = Response.Product;
+
+            // ACT
+            ProductOffer DDBOffer = ProductOffer.FromJson(Json);
+
+            // ASSERT
+            Assert.True(!String.IsNullOrEmpty(DDBOffer.Version));
+        }
+
         [Fact]
         public async Task ListServicesTest()
         {

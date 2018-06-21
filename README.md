@@ -9,6 +9,7 @@ index file in case you want to get the URLs for those specific offer files.
 - [Usage](#usage)
     * [Price List Client](#price-list-client)
     * [Index Files](#index-files)
+	* [Serde](#serde)
 - [Revision History](#revision-history)
 
 ## Usage
@@ -66,7 +67,31 @@ You could have also used the `PriceListClient` to do the same thing.
 This provides a list of all services that have pricing data available in the
 offer index file.
 
+### Serde
+
+There are serialization/deserialization classes for parsing the JSON content from
+a `GetProductResponse`. For example,
+
+    PriceListClientConfig Config = new PriceListClientConfig();
+
+    PriceListClient Client = new PriceListClient(Config);
+
+    GetProductRequest Request = new GetProductRequest("AmazonRDS")
+    {
+        Format = Format.CSV
+    };
+
+    GetProductResponse Response = await Client.GetProductAsync(Request);
+
+	ProductOffer RDSOffer = ProductOffer.FromJson(Response.Product);
+  
+Now in the `RDSOffer` object you can explore the different pricing terms, dimensions in each term, and 
+the set of products in that offer. 
+
 ## Revision History
+
+### 2.2.0
+Added deserialization classes for parsing the JSON for product offers.
 
 ### 2.1.2
 Added disposing for http response messages.
