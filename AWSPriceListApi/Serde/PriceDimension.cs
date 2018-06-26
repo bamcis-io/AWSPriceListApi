@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BAMCIS.AWSPriceListApi.Serde
 {
@@ -81,7 +83,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
             this.BeginRange = beginRange;
             this.EndRange = endRange;
             this.Unit = unit;
-            this.PricePerUnit = (pricePerUnit == null) ? new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()) : new ReadOnlyDictionary<string, string>(pricePerUnit);
+            this.PricePerUnit = (pricePerUnit == null) ? new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()) : new ReadOnlyDictionary<string, string>(pricePerUnit.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase));
             this.AppliesTo = (appliesTo == null) ? new ReadOnlyCollection<string>(new string[0]) : new ReadOnlyCollection<string>(appliesTo);
         }
 

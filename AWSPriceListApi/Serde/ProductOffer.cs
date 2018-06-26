@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BAMCIS.AWSPriceListApi.Serde
 {
@@ -120,7 +121,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
             this.PublicationDate = publicationDate;
             this.Products = products == null ? 
                 new ReadOnlyDictionary<string, Product>(new Dictionary<string, Product>()) : 
-                new ReadOnlyDictionary<string, Product>(products);
+                new ReadOnlyDictionary<string, Product>(products.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase));
             this.Terms = terms == null ?
                 new Dictionary<Term, IDictionary<string, IDictionary<string, PricingTerm>>>(new Dictionary<Term, IDictionary<string, IDictionary<string, PricingTerm>>>()) :
                 terms;

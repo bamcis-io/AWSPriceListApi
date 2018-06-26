@@ -90,6 +90,9 @@ the set of products in that offer.
 
 ## Revision History
 
+### 2.2.2
+Made all dictionary key comparisons case insensitive.
+
 ### 2.2.1
 Fixed property name `ProductInfo`.
 

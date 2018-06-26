@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BAMCIS.AWSPriceListApi.Serde
 {
@@ -10,7 +12,8 @@ namespace BAMCIS.AWSPriceListApi.Serde
     /// This is what a single product looks like in the AWS offer file
     ///{
     ///  ...
-    ///  "products": {    ///    ...
+    ///  "products": {
+    ///    ...
     ///    "TCFKJNWNXBMMZMQ3" : {
     ///      "sku" : "TCFKJNWNXBMMZMQ3",
     ///      "productFamily" : "Compute Instance",
@@ -53,7 +56,8 @@ namespace BAMCIS.AWSPriceListApi.Serde
     /// </summary>
     public sealed class Product
     { 
-        #region Public Properties
+        #region Public Properties
+
         /// <summary>
         /// The product unique SKU
         /// </summary>
@@ -86,7 +90,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
             IDictionary<string, string> attributes
             )
         {
-            this.Attributes = attributes == null ? new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()) : new ReadOnlyDictionary<string, string>(attributes);
+            this.Attributes = attributes == null ? new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()) : new ReadOnlyDictionary<string, string>(attributes.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase));
             this.ProductFamily = productFamily;
             this.Sku = sku;
         }

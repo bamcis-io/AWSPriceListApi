@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BAMCIS.AWSPriceListApi.Serde
 {
@@ -12,32 +13,39 @@ namespace BAMCIS.AWSPriceListApi.Serde
     /// </summary>
     public sealed class PricingTerm
     {
-        #region Public Properties
+        #region Public Properties
+
         /// <summary>
         /// The unique code of this offer term for the product SKU
         /// </summary>
-        public string OfferTermCode { get; }
+        public string OfferTermCode { get; }
+
         /// <summary>
         /// The SKU of the product
         /// </summary>
-        public string Sku { get; }
+        public string Sku { get; }
+
         /// <summary>
         /// The date this pricing term became effective
         /// </summary>
-        public DateTime EffectiveDate { get; }
+        public DateTime EffectiveDate { get; }
+
         /// <summary>
         /// The price dimensions that make up this pricing term, these are keyed by their
         /// rate code which is SKU.OfferTerCode.Rate
         /// </summary>
-        public IReadOnlyDictionary<string, PriceDimension> PriceDimensions { get; }
+        public IReadOnlyDictionary<string, PriceDimension> PriceDimensions { get; }
+
         /// <summary>
         /// The attributes for this term including lease contract length, purchase option, 
         /// and offering class. This is null for on demand terms.
         /// </summary>
         public TermAttributes TermAttributes { get; }
 
-        #endregion
-        #region Constructors
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Builds a new pricing term
         /// </summary>
@@ -58,7 +66,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
             this.OfferTermCode = offerTermCode;
             this.Sku = sku;
             this.EffectiveDate = effectiveDate;
-            this.PriceDimensions = new ReadOnlyDictionary<string, PriceDimension>(priceDimensions);
+            this.PriceDimensions = new ReadOnlyDictionary<string, PriceDimension>(priceDimensions.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase));
             this.TermAttributes = termAttributes ?? throw new ArgumentNullException("termAttributes");
         }
 

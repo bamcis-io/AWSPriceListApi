@@ -15,8 +15,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.2.1</Version>
-    <PackageReleaseNotes>Fixed PropertyInfo property name.</PackageReleaseNotes>
+    <Version>2.2.2</Version>
+    <PackageReleaseNotes>Made all dictionary key comparisons case insensitive.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
