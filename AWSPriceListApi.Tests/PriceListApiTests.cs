@@ -15,6 +15,40 @@ namespace AWSPriceListApi.Tests
     public class PriceListApiTests
     {
         [Fact]
+        public async Task TestElastiCache()
+        {
+            // ARRANGE
+            string Sku = "HBRQZSXXSY2DXJ77";
+
+            PriceListClient Client = new PriceListClient();
+
+            GetProductRequest Request = new GetProductRequest("AmazonElastiCache")
+            {
+                Format = Format.JSON
+            };
+
+            GetProductResponse Response = await Client.GetProductAsync(Request);
+
+            string Json = Response.ProductInfo;
+
+            ProductOffer ECOffer = ProductOffer.FromJson(Json);
+
+            // ACT
+
+            IEnumerable<IGrouping<string, PricingTerm>> GroupedTerms = ECOffer.Terms
+                .SelectMany(x => x.Value) // Get all of the product item dictionaries from on demand and reserved
+                                          //.Where(x => ApplicableProductSkus.Contains(x.Key)) // Only get the pricing terms for products we care about
+                .SelectMany(x => x.Value) // Get all of the pricing term key value pairs
+                .Select(x => x.Value) // Get just the pricing terms
+                .GroupBy(x => x.Sku); // Put all of the same skus together
+
+            IGrouping<string, PricingTerm> SkuTerms = GroupedTerms.First(x => x.Key.Equals(Sku));
+
+            // ASSERT
+            Assert.True(SkuTerms.Where(x => x.TermAttributes.PurchaseOption == PurchaseOption.ON_DEMAND).Count() == 1);
+        }
+
+        [Fact]
         public async Task ParseJsonTest()
         {
             // ARRANGE

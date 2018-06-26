@@ -6,6 +6,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
     /// <summary>
     /// A common set of pricing term attributes for a pricing term
     /// </summary>
+    [JsonConverter(typeof(TermAttributesConverter))]
     public sealed class TermAttributes
     {
         #region Public Properties

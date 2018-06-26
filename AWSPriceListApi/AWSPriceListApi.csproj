@@ -15,8 +15,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.2.2</Version>
-    <PackageReleaseNotes>Made all dictionary key comparisons case insensitive.</PackageReleaseNotes>
+    <Version>2.2.3</Version>
+    <PackageReleaseNotes>Corrected the handling of term attributes that are empty objects in the JSON file.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

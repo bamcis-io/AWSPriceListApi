@@ -90,6 +90,9 @@ the set of products in that offer.
 
 ## Revision History
 
+### 2.2.3
+Corrected the handling of term attributes that are empty objects in the JSON file.
+
 ### 2.2.2
 Made all dictionary key comparisons case insensitive.
 
