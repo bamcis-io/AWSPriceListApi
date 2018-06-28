@@ -28,27 +28,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string Value = (string)reader.Value;
-
-            Match M = Regex.Match(Value, "^([0-9]+).*$");
-
-            if (M.Success)
-            {
-                string YearsString = M.Groups[1].Value;
-
-                if (Int32.TryParse(YearsString, out int Years))
-                {
-                    return Years;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                return 0;
-            }
+            return EnumConverters.ConvertToLeaseContractLength(reader.Value as string);
         }
 
         public override bool CanConvert(Type objectType)

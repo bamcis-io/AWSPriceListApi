@@ -45,25 +45,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string Value = (string)reader.Value;
-
-            switch (Value.ToLower())
-            {
-                // Ensure anything that doesn't have an offering class is labeled as standard
-                default:
-                case "standard":
-                    {
-                        return OfferingClass.STANDARD;
-                    }
-                case "convertible":
-                    {
-                        return OfferingClass.CONVERTIBLE;
-                    }
-                case "unknown":
-                    {
-                        return OfferingClass.UNKNOWN;
-                    }
-            }
+            return EnumConverters.ConvertToOfferingClass(reader.Value as string);
         }
 
         public override bool CanConvert(Type objectType)

@@ -15,8 +15,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.2.3</Version>
-    <PackageReleaseNotes>Corrected the handling of term attributes that are empty objects in the JSON file.</PackageReleaseNotes>
+    <Version>2.3.0</Version>
+    <PackageReleaseNotes>Added convenience methods for converting purchase option, offering class, term, and lease contract length.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

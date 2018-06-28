@@ -64,44 +64,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string Value = (string)reader.Value;
-
-            switch (Value.ToLower())
-            {
-                default:
-                case "ondemand":
-                    {
-                        return PurchaseOption.ON_DEMAND;
-                    }
-                case "all upfront":
-                    {
-                        return PurchaseOption.ALL_UPFRONT;
-                    }
-                case "partial upfront":
-                    {
-                        return PurchaseOption.PARTIAL_UPFRONT;
-                    }
-                case "no upfront":
-                    {
-                        return PurchaseOption.NO_UPFRONT;
-                    }
-                case "heavy utilization":
-                    {
-                        return PurchaseOption.HEAVY_UTILIZATION;
-                    }
-                case "medium utilization":
-                    {
-                        return PurchaseOption.MEDIUM_UTILIZATION;
-                    }
-                case "light utilization":
-                    {
-                        return PurchaseOption.LIGHT_UTILIZATION;
-                    }
-                case "unknown":
-                    {
-                        return PurchaseOption.UNKNOWN;
-                    }
-            }
+            return EnumConverters.ConvertToPurchaseOption(reader.Value as string);      
         }
 
         public override bool CanConvert(Type objectType)

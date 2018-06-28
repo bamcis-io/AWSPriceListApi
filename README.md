@@ -90,6 +90,9 @@ the set of products in that offer.
 
 ## Revision History
 
+### 2.3.0
+Added convenience methods for converting purchase option, offering class, term, and lease contract length.
+
 ### 2.2.3
 Corrected the handling of term attributes that are empty objects in the JSON file.
 
