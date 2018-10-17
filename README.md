@@ -90,6 +90,9 @@ the set of products in that offer.
 
 ## Revision History
 
+### 2.3.1
+Fixed bug in the PurchaseOption parsing. The price list files sometimes contain spaces between words like "All Upfront" and sometimes not, like "AllUpfront". The EnumConverter now handles this.
+
 ### 2.3.0
 Added convenience methods for converting purchase option, offering class, term, and lease contract length.
 

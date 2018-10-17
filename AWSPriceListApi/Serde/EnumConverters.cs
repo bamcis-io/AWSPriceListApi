@@ -23,33 +23,40 @@ namespace BAMCIS.AWSPriceListApi.Serde
                 return PurchaseOption.ON_DEMAND;
             }
 
-            switch (value.ToLower())
+            switch (value.ToLower().Replace(" ", ""))
             {
                 default:
+                case "on demand":
                 case "ondemand":
                     {
                         return PurchaseOption.ON_DEMAND;
                     }
+                case "allupfront":
                 case "all upfront":
                     {
                         return PurchaseOption.ALL_UPFRONT;
                     }
+                case "partialupfront":
                 case "partial upfront":
                     {
                         return PurchaseOption.PARTIAL_UPFRONT;
                     }
+                case "noupfront":
                 case "no upfront":
                     {
                         return PurchaseOption.NO_UPFRONT;
                     }
+                case "heavyutilization":
                 case "heavy utilization":
                     {
                         return PurchaseOption.HEAVY_UTILIZATION;
                     }
+                case "mediumutilization":
                 case "medium utilization":
                     {
                         return PurchaseOption.MEDIUM_UTILIZATION;
                     }
+                case "lightutilization":
                 case "light utilization":
                     {
                         return PurchaseOption.LIGHT_UTILIZATION;

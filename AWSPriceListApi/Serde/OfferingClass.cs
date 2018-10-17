@@ -11,12 +11,14 @@ namespace BAMCIS.AWSPriceListApi.Serde
         /// <summary>
         /// The standard offering class
         /// </summary>
-        STANDARD = 0,
+        STANDARD = 0,
+
         /// <summary>
         /// The convertible offering class, these reserved instances can be converted
         /// to cover instances of smaller or larger types in the same family
         /// </summary>
-        CONVERTIBLE = 1,
+        CONVERTIBLE = 1,
+
         /// <summary>
         /// The offering class is unknown
         /// </summary>

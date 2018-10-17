@@ -17,4 +17,13 @@
     <ProjectReference Include="..\AWSPriceListApi\AWSPriceListApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="index.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReservedHostEC2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

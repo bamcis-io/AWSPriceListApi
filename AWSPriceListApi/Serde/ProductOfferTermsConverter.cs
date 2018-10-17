@@ -42,13 +42,25 @@ namespace BAMCIS.AWSPriceListApi.Serde
                 return null;
             }
 
+            // Get the second type of the dictionary, for ProductOffer Terms, the dictionary looks like
+            // Dictionary<Term, IDictionary<string, IDictionary<string, PricingTerm>>>, so the type is
+            // IDictionary<string, IDictionary<string, PricingTerm>>
             Type ValueType = objectType.GenericTypeArguments[1];
+
+            // Create a dictionary where the key is a string instead of the Term Enum
             Type IntermediateDictionaryType = typeof(Dictionary<,>).MakeGenericType(typeof(string), ValueType);
             IDictionary IntermediateDictionary = (IDictionary)Activator.CreateInstance(IntermediateDictionaryType);
+
+            // Populate the dictionary from the Json, this is what would normally happen,
+            // but we will need to take another step to swap the string key for the enum
             serializer.Populate(reader, IntermediateDictionary);
 
+            // This is the final dictionary that will be populated
             var FinalDictionary = (IDictionary)Activator.CreateInstance(objectType);
 
+            // Populate the dictionary with the values from the intermediate dictionary
+            // and populate the appropriate keys, this should only loop twice, once for
+            // OnDemand and then for Reserved
             foreach (DictionaryEntry pair in IntermediateDictionary)
             {
                 switch (pair.Key.ToString().ToLower())

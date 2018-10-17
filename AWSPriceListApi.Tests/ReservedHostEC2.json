@@ -1,0 +1,229 @@
+﻿{
+  "formatVersion": "v1.0",
+  "disclaimer": "This pricing list is for informational purposes only. All prices are subject to the additional terms included in the pricing pages on http://aws.amazon.com. All Free Tier prices are also subject to the terms included at https://aws.amazon.com/free/",
+  "offerCode": "AmazonEC2",
+  "version": "20180921012104",
+  "publicationDate": "2018-09-21T01:21:04Z",
+  "products": {
+    "R788QK3FA3RPDDXZ": {
+      "sku": "R788QK3FA3RPDDXZ",
+      "productFamily": "Dedicated Host",
+      "attributes": {
+        "servicecode": "AmazonEC2",
+        "location": "Asia Pacific (Singapore)",
+        "locationType": "AWS Region",
+        "instanceType": "m5",
+        "currentGeneration": "Yes",
+        "instanceFamily": "General purpose",
+        "vcpu": "96",
+        "physicalProcessor": "Intel Xeon Platinum 8175",
+        "clockSpeed": "2.5 GHz",
+        "memory": "NA",
+        "storage": "NA",
+        "networkPerformance": "NA",
+        "processorArchitecture": "64-bit",
+        "tenancy": "Reserved",
+        "operatingSystem": "Linux",
+        "licenseModel": "No License required",
+        "usagetype": "APS1-ReservedHostUsage:m5",
+        "operation": "RunInstances",
+        "capacitystatus": "AllocatedHost",
+        "ecu": "NA",
+        "instanceCapacity12xlarge": "2",
+        "instanceCapacity24xlarge": "1",
+        "instanceCapacity2xlarge": "12",
+        "instanceCapacity4xlarge": "6",
+        "instanceCapacityLarge": "48",
+        "instanceCapacityXlarge": "24",
+        "normalizationSizeFactor": "NA",
+        "physicalCores": "48",
+        "preInstalledSw": "NA",
+        "processorFeatures": "Intel AVX, Intel AVX2, Intel AVX512, Intel Turbo",
+        "servicename": "Amazon Elastic Compute Cloud"
+      }
+    }
+  },
+  "terms": {
+    "OnDemand": {
+
+    },
+    "Reserved": {
+      "R788QK3FA3RPDDXZ": {
+        "R788QK3FA3RPDDXZ.CPPW92X9U4": {
+          "offerTermCode": "CPPW92X9U4",
+          "sku": "R788QK3FA3RPDDXZ",
+          "effectiveDate": "2018-01-01T18:21:35Z",
+          "priceDimensions": {
+            "R788QK3FA3RPDDXZ.CPPW92X9U4.6YS6EN2CT7": {
+              "rateCode": "R788QK3FA3RPDDXZ.CPPW92X9U4.6YS6EN2CT7",
+              "description": "M5 Dedicated Host Reservation hours used this month",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "0.0000000000"
+              },
+              "appliesTo": []
+            },
+            "R788QK3FA3RPDDXZ.CPPW92X9U4.2TG2D8R56U": {
+              "rateCode": "R788QK3FA3RPDDXZ.CPPW92X9U4.2TG2D8R56U",
+              "description": "Upfront Fee",
+              "unit": "Quantity",
+              "pricePerUnit": {
+                "USD": "63912"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "3 yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "AllUpfront"
+          }
+        },
+        "R788QK3FA3RPDDXZ.UDM74VY9CQ": {
+          "offerTermCode": "UDM74VY9CQ",
+          "sku": "R788QK3FA3RPDDXZ",
+          "effectiveDate": "2018-01-01T18:21:44Z",
+          "priceDimensions": {
+            "R788QK3FA3RPDDXZ.UDM74VY9CQ.6YS6EN2CT7": {
+              "rateCode": "R788QK3FA3RPDDXZ.UDM74VY9CQ.6YS6EN2CT7",
+              "description": "M5 Dedicated Host Reservation hours used this month",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "2.7940000000"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "3 yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "NoUpfront"
+          }
+        },
+        "R788QK3FA3RPDDXZ.DXEJ4EGHUJ": {
+          "offerTermCode": "DXEJ4EGHUJ",
+          "sku": "R788QK3FA3RPDDXZ",
+          "effectiveDate": "2018-01-01T18:21:31Z",
+          "priceDimensions": {
+            "R788QK3FA3RPDDXZ.DXEJ4EGHUJ.2TG2D8R56U": {
+              "rateCode": "R788QK3FA3RPDDXZ.DXEJ4EGHUJ.2TG2D8R56U",
+              "description": "Upfront Fee",
+              "unit": "Quantity",
+              "pricePerUnit": {
+                "USD": "33543"
+              },
+              "appliesTo": []
+            },
+            "R788QK3FA3RPDDXZ.DXEJ4EGHUJ.6YS6EN2CT7": {
+              "rateCode": "R788QK3FA3RPDDXZ.DXEJ4EGHUJ.6YS6EN2CT7",
+              "description": "M5 Dedicated Host Reservation hours used this month",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "0.0000000000"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "1 yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "AllUpfront"
+          }
+        },
+        "R788QK3FA3RPDDXZ.3RJ4P9STGK": {
+          "offerTermCode": "3RJ4P9STGK",
+          "sku": "R788QK3FA3RPDDXZ",
+          "effectiveDate": "2018-01-01T18:21:52Z",
+          "priceDimensions": {
+            "R788QK3FA3RPDDXZ.3RJ4P9STGK.6YS6EN2CT7": {
+              "rateCode": "R788QK3FA3RPDDXZ.3RJ4P9STGK.6YS6EN2CT7",
+              "description": "M5 Dedicated Host Reservation hours used this month",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "1.2940000000"
+              },
+              "appliesTo": []
+            },
+            "R788QK3FA3RPDDXZ.3RJ4P9STGK.2TG2D8R56U": {
+              "rateCode": "R788QK3FA3RPDDXZ.3RJ4P9STGK.2TG2D8R56U",
+              "description": "Upfront Fee",
+              "unit": "Quantity",
+              "pricePerUnit": {
+                "USD": "33996"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "3 yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "PartialUpfront"
+          }
+        },
+        "R788QK3FA3RPDDXZ.CRSZ9MHARF": {
+          "offerTermCode": "CRSZ9MHARF",
+          "sku": "R788QK3FA3RPDDXZ",
+          "effectiveDate": "2018-01-01T18:21:40Z",
+          "priceDimensions": {
+            "R788QK3FA3RPDDXZ.CRSZ9MHARF.6YS6EN2CT7": {
+              "rateCode": "R788QK3FA3RPDDXZ.CRSZ9MHARF.6YS6EN2CT7",
+              "description": "M5 Dedicated Host Reservation hours used this month",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "4.1030000000"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "1 yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "NoUpfront"
+          }
+        },
+        "R788QK3FA3RPDDXZ.YKSHTEAGQM": {
+          "offerTermCode": "YKSHTEAGQM",
+          "sku": "R788QK3FA3RPDDXZ",
+          "effectiveDate": "2018-01-01T18:21:48Z",
+          "priceDimensions": {
+            "R788QK3FA3RPDDXZ.YKSHTEAGQM.2TG2D8R56U": {
+              "rateCode": "R788QK3FA3RPDDXZ.YKSHTEAGQM.2TG2D8R56U",
+              "description": "Upfront Fee",
+              "unit": "Quantity",
+              "pricePerUnit": {
+                "USD": "17114"
+              },
+              "appliesTo": []
+            },
+            "R788QK3FA3RPDDXZ.YKSHTEAGQM.6YS6EN2CT7": {
+              "rateCode": "R788QK3FA3RPDDXZ.YKSHTEAGQM.6YS6EN2CT7",
+              "description": "M5 Dedicated Host Reservation hours used this month",
+              "beginRange": "0",
+              "endRange": "Inf",
+              "unit": "Hrs",
+              "pricePerUnit": {
+                "USD": "1.9540000000"
+              },
+              "appliesTo": []
+            }
+          },
+          "termAttributes": {
+            "LeaseContractLength": "1 yr",
+            "OfferingClass": "standard",
+            "PurchaseOption": "PartialUpfront"
+          }
+        }
+      }
+    }
+  }
+}

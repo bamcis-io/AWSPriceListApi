@@ -1,11 +1,12 @@
 using BAMCIS.AWSPriceListApi;
 using BAMCIS.AWSPriceListApi.Serde;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -49,6 +50,31 @@ namespace AWSPriceListApi.Tests
         }
 
         [Fact]
+        public void TestEC2ReservedHost()
+        {
+            // ARRANGE
+            string Sku = "R788QK3FA3RPDDXZ";
+
+            string Json = File.ReadAllText("ReservedHostEC2.json");
+
+            ProductOffer ECOffer = ProductOffer.FromJson(Json);
+
+            // ACT
+
+            IEnumerable<IGrouping<string, PricingTerm>> GroupedTerms = ECOffer.Terms
+                .SelectMany(x => x.Value) // Get all of the product item dictionaries from on demand and reserved
+                                          //.Where(x => ApplicableProductSkus.Contains(x.Key)) // Only get the pricing terms for products we care about
+                .SelectMany(x => x.Value) // Get all of the pricing term key value pairs
+                .Select(x => x.Value) // Get just the pricing terms
+                .GroupBy(x => x.Sku); // Put all of the same skus together
+
+            IGrouping<string, PricingTerm> SkuTerms = GroupedTerms.First(x => x.Key.Equals(Sku));
+
+            // ASSERT
+            Assert.True(SkuTerms.Where(x => x.TermAttributes.PurchaseOption == PurchaseOption.ON_DEMAND).Count() == 0);
+        }
+
+        [Fact]
         public async Task ParseJsonTest()
         {
             // ARRANGE
@@ -68,6 +94,26 @@ namespace AWSPriceListApi.Tests
 
             // ASSERT
             Assert.True(!String.IsNullOrEmpty(DDBOffer.Version));
+        }
+
+        [Fact]
+        public void FromJsonTest()
+        {
+            // ARRANGE
+            using (FileStream Stream = File.OpenRead("index.json"))
+            {
+                byte[] Bytes = new byte[Stream.Length];
+
+                Stream.Read(Bytes, 0, Bytes.Length);
+
+                string Json = Encoding.UTF8.GetString(Bytes);
+
+                // ACT
+                ProductOffer Offer = ProductOffer.FromJson(Json);
+
+                // ASSERT
+                Assert.NotNull(Offer);
+            }
         }
 
         [Fact]

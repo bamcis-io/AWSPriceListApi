@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFrameworks>netstandard1.6;netstandard2.0;net45</TargetFrameworks>
+    <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
     <RootNamespace>BAMCIS.AWSPriceListApi</RootNamespace>
     <Authors>Michael Haken</Authors>
     <Company>bamcis.io</Company>
@@ -15,8 +16,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
-    <Version>2.3.0</Version>
-    <PackageReleaseNotes>Added convenience methods for converting purchase option, offering class, term, and lease contract length.</PackageReleaseNotes>
+    <Version>2.3.1</Version>
+    <PackageReleaseNotes>Minor bug fixes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
