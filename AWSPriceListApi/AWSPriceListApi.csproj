@@ -16,12 +16,12 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <NetStandardImplicitPackageVersion>1.6</NetStandardImplicitPackageVersion>
     <Version>3.0.0</Version>
     <PackageReleaseNotes>To prevent unnecessary memory utilization the response data is maintained as a stream instead of being read as a string by default. This allows you to read or copy the stream to another stream to perform csv or json operations.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AWSPriceListApi.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
