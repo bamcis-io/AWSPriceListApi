@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace BAMCIS.AWSPriceListApi
 {
@@ -9,6 +11,12 @@ namespace BAMCIS.AWSPriceListApi
     /// </summary>
     public sealed class GetProductResponse
     {
+        #region Private Fields
+
+        private static volatile object sync = new object();
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -24,7 +32,7 @@ namespace BAMCIS.AWSPriceListApi
         /// <summary>
         /// The content of the product pricing information
         /// </summary>
-        public string ProductInfo { get; }
+        public Stream ProductInfo { get; }
 
         /// <summary>
         /// The format of the data
@@ -50,22 +58,78 @@ namespace BAMCIS.AWSPriceListApi
         /// </summary>
         /// <param name="response"></param>
         /// <param name="format"></param>
-        internal GetProductResponse(HttpResponseMessage response, GetProductRequest request)
+        internal GetProductResponse(HttpResponseMessage response, GetProductRequest request, bool disposeResponse = false)
         {
-            this.StatusCode = response.StatusCode;           
-            this.Format = request.Format;
-            this.ServiceCode = request.ServiceCode;
-            this.IsError = !response.IsSuccessStatusCode;
+            try
+            {
+                this.StatusCode = response.StatusCode;
+                this.Format = request.Format;
+                this.ServiceCode = request.ServiceCode;
+                this.IsError = !response.IsSuccessStatusCode;
+                this.ProductInfo = new MemoryStream();
 
-            if (this.IsError)
-            {
-                this.Reason = response.Content.ReadAsStringAsync().Result;
-                this.ProductInfo = String.Empty;
+                if (this.IsError)
+                {
+                    this.Reason = response.Content.ReadAsStringAsync().Result; 
+                }
+                else
+                {
+                    response.Content.LoadIntoBufferAsync().Wait();
+                    response.Content.CopyToAsync(this.ProductInfo).Wait();
+                    this.ProductInfo.Position = 0;
+                    this.Reason = String.Empty;
+                }
             }
-            else
+            finally
             {
-                this.ProductInfo = response.Content.ReadAsStringAsync().Result;
-                this.Reason = String.Empty;
+                if (disposeResponse)
+                {
+                    try
+                    {
+                        response.Content.Dispose();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        response.Dispose();
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Deconstructor
+
+        ~GetProductResponse()
+        {
+            try
+            {
+                this.ProductInfo.Dispose();
+            }
+            catch
+            { }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Gets the product info stream as a string
+        /// </summary>
+        /// <returns></returns>
+        public string GetProductInfoAsString()
+        {
+            lock (sync)
+            {
+                this.ProductInfo.Position = 0;
+                using (StreamReader reader = new StreamReader(this.ProductInfo))
+                {
+                    return reader.ReadToEnd();
+                }
             }
         }
 

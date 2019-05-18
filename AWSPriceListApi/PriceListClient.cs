@@ -13,11 +13,11 @@ namespace BAMCIS.AWSPriceListApi
     {
         #region Private Fields
 
-        private static HttpClientHandler _Handler = new HttpClientHandler();
+        private static HttpClientHandler handler;
 
-        private static HttpClient _Client = new HttpClient(_Handler);
+        private static HttpClient httpClient;
 
-        private OfferIndexFile _IndexFile = null;
+        private OfferIndexFile indexFile = null;
 
         #endregion
 
@@ -31,6 +31,15 @@ namespace BAMCIS.AWSPriceListApi
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Static constructor
+        /// </summary>
+        static PriceListClient()
+        {
+            handler = new HttpClientHandler();
+            httpClient = new HttpClient(handler);
+        }
 
         /// <summary>
         /// Creates a new price list client with the default configuration
@@ -71,13 +80,13 @@ namespace BAMCIS.AWSPriceListApi
         /// <returns></returns>
         public async Task<GetOfferIndexFileResponse> GetOfferIndexFileAsync(GetOfferIndexFileRequest request)
         {
-            if (this._IndexFile == null || this.Config.NoCache)
+            if (this.indexFile == null || this.Config.NoCache)
             {
-                string Path = $"{this.Config.GetBaseUrlString()}{request.RelativePath}";
+                string path = $"{this.Config.GetBaseUrlString()}{request.RelativePath}";
 
                 try
                 {
-                    this._IndexFile = await OfferIndexFile.GetAsync(Path);
+                    this.indexFile = await OfferIndexFile.GetAsync(path);
                 }
                 catch (PriceListException ex)
                 {
@@ -85,7 +94,7 @@ namespace BAMCIS.AWSPriceListApi
                 }
             }
 
-            return new GetOfferIndexFileResponse(this._IndexFile);
+            return new GetOfferIndexFileResponse(this.indexFile);
         }
 
         /// <summary>
@@ -103,21 +112,21 @@ namespace BAMCIS.AWSPriceListApi
         /// <returns></returns>
         public async Task<ListServicesResponse> ListServicesAsync(ListServicesRequest request)
         {
-            if (this._IndexFile == null || this.Config.NoCache)
+            if (this.indexFile == null || this.Config.NoCache)
             {
-                GetOfferIndexFileResponse Response = await this.GetOfferIndexFileAsync();
+                GetOfferIndexFileResponse response = await this.GetOfferIndexFileAsync();
 
-                if (!Response.IsError)
+                if (!response.IsError)
                 {
-                    this._IndexFile = Response.OfferIndexFile;
+                    this.indexFile = response.OfferIndexFile;
                 }
                 else
                 {
-                    throw new PriceListException(Response.Reason, Response.StatusCode);
+                    throw new PriceListException(response.Reason, response.StatusCode);
                 }
             }
 
-            return new ListServicesResponse(this._IndexFile.Offers.Keys);
+            return new ListServicesResponse(this.indexFile.Offers.Keys);
         }
 
         /// <summary>
@@ -127,41 +136,41 @@ namespace BAMCIS.AWSPriceListApi
         /// <returns></returns>
         public async Task<GetProductResponse> GetProductAsync(GetProductRequest request)
         {
-            if (this._IndexFile == null || this.Config.NoCache)
+            if (this.indexFile == null || this.Config.NoCache)
             {
-                GetOfferIndexFileResponse Response = await GetOfferIndexFileAsync();
+                GetOfferIndexFileResponse response = await GetOfferIndexFileAsync();
 
-                if (!Response.IsError)
+                if (!response.IsError)
                 {
-                    this._IndexFile = Response.OfferIndexFile;
+                    this.indexFile = response.OfferIndexFile;
                 }
                 else
                 {
-                    throw new PriceListException(Response.Reason, Response.StatusCode)
+                    throw new PriceListException(response.Reason, response.StatusCode)
                     {
-                        Reason = Response.Reason
+                        Reason = response.Reason
                     };
                 }
             }
 
-            IEnumerable<KeyValuePair<string, Offer>> Offers = this._IndexFile.Offers.Where(
+            IEnumerable<KeyValuePair<string, Offer>> offers = this.indexFile.Offers.Where(
                 x => x.Key.Equals(request.ServiceCode, StringComparison.OrdinalIgnoreCase)
             );
 
-            if (Offers.Any())
+            if (offers.Any())
             {
-                string Path = $"{this.Config.GetBaseUrlString()}{Offers.First().Value.CurrentVersionUrl}";
+                string path = $"{this.Config.GetBaseUrlString()}{offers.First().Value.CurrentVersionUrl}";
 
                 switch (request.Format)
                 {
                     case Format.CSV:
                         {
-                            Path = System.IO.Path.ChangeExtension(Path, "csv");
+                            path = System.IO.Path.ChangeExtension(path, "csv");
                             break;
                         }
                     case Format.JSON:
                         {
-                            Path = System.IO.Path.ChangeExtension(Path, "json");
+                            path = System.IO.Path.ChangeExtension(path, "json");
                             break;
                         }
                     default:
@@ -170,26 +179,27 @@ namespace BAMCIS.AWSPriceListApi
                         }
                 }
 
-                HttpResponseMessage Response = await _Client.GetAsync(Path);
+                HttpResponseMessage response = await httpClient.GetAsync(path);
 
                 try
                 {
-                    if (Response.IsSuccessStatusCode)
+                    if (response.IsSuccessStatusCode)
                     {
-                        return new GetProductResponse(Response, request);
+                        return new GetProductResponse(response, request);
                     }
                     else
                     {
-                        throw new PriceListException(await Response.Content.ReadAsStringAsync(), Response.StatusCode)
+                        throw new PriceListException(await response.Content.ReadAsStringAsync(), response.StatusCode)
                         {
-                            Reason = Response.ReasonPhrase,
-                            Request = Response.RequestMessage
+                            Reason = response.ReasonPhrase,
+                            Request = response.RequestMessage
                         };
                     }
                 }
                 finally
                 {
-                    Response.Dispose();
+                    response.Content.Dispose();
+                    response.Dispose();
                 }
             }
             else

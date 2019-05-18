@@ -18,77 +18,76 @@ index file in case you want to get the URLs for those specific offer files.
 
 Here's an example of some usage:
 
-    PriceListClientConfig Config = new PriceListClientConfig();
+    PriceListClientConfig config = new PriceListClientConfig();
 
-    PriceListClient Client = new PriceListClient(Config);
+    PriceListClient client = new PriceListClient(config);
 
-    GetProductRequest Request = new GetProductRequest("AmazonRDS")
+    GetProductRequest request = new GetProductRequest("AmazonRDS")
     {
         Format = Format.CSV
     };
 
-    GetProductResponse Response = await Client.GetProductAsync(Request);
+    GetProductResponse response = await Client.GetProductAsync(request);
 
-    System.IO.File.WriteAllText("c:\\users\\me\\desktop\\rds.csv", Response.ProductInfo);
+    System.IO.File.WriteAllText("c:\\users\\me\\desktop\\rds.csv", response.GetProductInfoAsString());
 
 This set of commands gets the pricing information for RDS and writes the CSV content to a file.
 
 ### Index Files
 
-    OfferIndexFile File = await OfferIndexFile.GetAsync();
-    ConcurrentBag<RegionIndex> Indexes = new ConcurrentBag<RegionIndex>();
+    OfferIndexFile file = await OfferIndexFile.GetAsync();
+    ConcurrentBag<RegionIndex> indexes = new ConcurrentBag<RegionIndex>();
 
-    IEnumerable<Task> Tasks = File.Offers.Select(async x =>
+    IEnumerable<Task> tasks = file.Offers.Select(async x =>
     {
-        RegionIndex Index = await x.Value.GetRegionIndexAsync();
-        if (Index != null)
+        RegionIndex index = await x.Value.GetRegionIndexAsync();
+        if (index != null)
         {
-            Indexes.Add(Index);
+            indexes.Add(index);
         }                       
     });
 
-    await Task.WhenAll(Tasks);
+    await Task.WhenAll(tasks);
 
-This example gets the region index files for the services that have a region index file url
-defined in the offer index file.
+This example gets the region index files for the services that have a region index file url defined in the offer index file.
 
 You could have also used the `PriceListClient` to do the same thing.
 
-    PriceListClient Client = new PriceListClient();
-	GetOfferIndexFileResponse Response = await Client.GetOfferIndexFileAsync();
-	OfferIndexFile File = Response.OfferIndexFile;
+    PriceListClient client = new PriceListClient();
+	GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync();
+	OfferIndexFile file = response.OfferIndexFile;
 
 ### Listing Services
 
-    PriceListClient Client = new PriceListClient();
-    ListServicesResponse Response = await Client.ListServicesAsync();
-	IEnumerable<string> Services = Response.Services;
+    PriceListClient client = new PriceListClient();
+    ListServicesResponse response = await client.ListServicesAsync();
+	IEnumerable<string> services = response.Services;
 
-This provides a list of all services that have pricing data available in the
-offer index file.
+This provides a list of all services that have pricing data available in the offer index file.
 
 ### Serde
 
-There are serialization/deserialization classes for parsing the JSON content from
-a `GetProductResponse`. For example,
+There are serialization/deserialization classes for parsing the JSON content from a `GetProductResponse`. For example,
 
-    PriceListClientConfig Config = new PriceListClientConfig();
+    PriceListClientConfig config = new PriceListClientConfig();
 
-    PriceListClient Client = new PriceListClient(Config);
+    PriceListClient client = new PriceListClient(config);
 
-    GetProductRequest Request = new GetProductRequest("AmazonRDS")
+    GetProductRequest request = new GetProductRequest("AmazonRDS")
     {
         Format = Format.CSV
     };
 
-    GetProductResponse Response = await Client.GetProductAsync(Request);
+    GetProductResponse response = await client.GetProductAsync(request);
 
-	ProductOffer RDSOffer = ProductOffer.FromJson(Response.ProductInfo);
+	ProductOffer rdsOffer = ProductOffer.FromJson(response.GetProductInfoAsString());
   
-Now in the `RDSOffer` object you can explore the different pricing terms, dimensions in each term, and 
-the set of products in that offer. 
+Now in the `rdsOffer` object you can explore the different pricing terms, dimensions in each term, and the set of products in that offer. 
 
 ## Revision History
+
+### 3.0.0
+To prevent unnecessary memory utilization the response data is maintained as a stream instead of being read as a string by default. This allows you to read or copy the stream to another stream to perform csv or json operations.
 
 ### 2.3.1
 Fixed bug in the PurchaseOption parsing. The price list files sometimes contain spaces between words like "All Upfront" and sometimes not, like "AllUpfront". The EnumConverter now handles this.

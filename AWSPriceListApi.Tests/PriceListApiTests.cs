@@ -30,9 +30,7 @@ namespace AWSPriceListApi.Tests
 
             GetProductResponse Response = await Client.GetProductAsync(Request);
 
-            string Json = Response.ProductInfo;
-
-            ProductOffer ECOffer = ProductOffer.FromJson(Json);
+            ProductOffer ECOffer = ProductOffer.FromJson(Response.GetProductInfoAsString());
 
             // ACT
 
@@ -87,10 +85,8 @@ namespace AWSPriceListApi.Tests
 
             GetProductResponse Response = await Client.GetProductAsync(Request);
 
-            string Json = Response.ProductInfo;
-
             // ACT
-            ProductOffer DDBOffer = ProductOffer.FromJson(Json);
+            ProductOffer DDBOffer = ProductOffer.FromJson(Response.GetProductInfoAsString());
 
             // ASSERT
             Assert.True(!String.IsNullOrEmpty(DDBOffer.Version));
