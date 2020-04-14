@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace BAMCIS.AWSPriceListApi.Serde
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// Represents a price dimension inside an AWS offer term, this is a specific component to pricing
@@ -78,10 +78,25 @@ namespace BAMCIS.AWSPriceListApi.Serde
             IList<string> appliesTo
             )
         {
+            if (String.IsNullOrEmpty(rateCode))
+            {
+                throw new ArgumentNullException(nameof(rateCode));
+            }
+
+            if (String.IsNullOrEmpty(description))
+            {
+                throw new ArgumentNullException(nameof(description));
+            }
+
+            if (String.IsNullOrEmpty(unit))
+            {
+                throw new ArgumentNullException(nameof(unit));
+            }
+
             this.RateCode = rateCode;
             this.Description = description;
-            this.BeginRange = beginRange;
-            this.EndRange = endRange;
+            this.BeginRange = beginRange ?? String.Empty; // This is null for the "Upfront Fee" dimension
+            this.EndRange = endRange ?? String.Empty; // This is null for the "Upfront Fee" dimension
             this.Unit = unit;
             this.PricePerUnit = (pricePerUnit == null) ? new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()) : new ReadOnlyDictionary<string, string>(pricePerUnit.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase));
             this.AppliesTo = (appliesTo == null) ? new ReadOnlyCollection<string>(new string[0]) : new ReadOnlyCollection<string>(appliesTo);

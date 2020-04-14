@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2018
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWSPriceListApi", "AWSPriceListApi\AWSPriceListApi.csproj", "{B035D4D6-45F9-4D5C-AD6B-F9820732F923}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSPriceListApi", "AWSPriceListApi\AWSPriceListApi.csproj", "{B035D4D6-45F9-4D5C-AD6B-F9820732F923}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWSPriceListApi.Tests", "AWSPriceListApi.Tests\AWSPriceListApi.Tests.csproj", "{7472A2BA-8F7B-4701-B809-EE29DD8758AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSPriceListApi.Tests", "AWSPriceListApi.Tests\AWSPriceListApi.Tests.csproj", "{7472A2BA-8F7B-4701-B809-EE29DD8758AA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6D52751A-E693-4711-82DC-718CFC9F0DE4}"
 	ProjectSection(SolutionItems) = preProject
-		LICENSE = LICENSE
+		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject

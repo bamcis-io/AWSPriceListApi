@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace BAMCIS.AWSPriceListApi
+namespace BAMCIS.AWSPriceListApi.Model.SavingsPlan
 {
     /// <summary>
-    /// The region offer index data
+    /// Represents the Savings Plan region index data
     /// </summary>
-    public sealed class RegionIndex
+    public class SavingsPlanRegionIndex
     {
         #region Public Properties
 
@@ -17,21 +17,21 @@ namespace BAMCIS.AWSPriceListApi
 
         public DateTime PublicationDate { get; }
 
-        public IDictionary<string, RegionData> Regions { get; }
+        public IEnumerable<SavingsPlanRegionData> Regions { get; }
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Builds a new region index data
+        /// Builds a new savings plan region index
         /// </summary>
         /// <param name="formatVersion"></param>
         /// <param name="disclaimer"></param>
         /// <param name="publicationDate"></param>
         /// <param name="regions"></param>
         [JsonConstructor]
-        public RegionIndex(string formatVersion, string disclaimer, DateTime publicationDate, IDictionary<string, RegionData> regions)
+        public SavingsPlanRegionIndex(string formatVersion, string disclaimer, DateTime publicationDate, IEnumerable<SavingsPlanRegionData> regions)
         {
             if (String.IsNullOrEmpty(formatVersion))
             {

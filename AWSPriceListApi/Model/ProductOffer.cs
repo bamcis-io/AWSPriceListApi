@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Serde;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 
-namespace BAMCIS.AWSPriceListApi.Serde
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// The offer data for an individal AWS service
@@ -114,6 +116,26 @@ namespace BAMCIS.AWSPriceListApi.Serde
             Dictionary<Term, IDictionary<string, IDictionary<string, PricingTerm>>> terms 
         )
         {
+            if (String.IsNullOrEmpty(formatVersion))
+            {
+                throw new ArgumentNullException(nameof(formatVersion));
+            }
+
+            if (String.IsNullOrEmpty(disclaimer))
+            {
+                throw new ArgumentNullException(nameof(disclaimer));
+            }
+
+            if (String.IsNullOrEmpty(offerCode))
+            {
+                throw new ArgumentNullException(nameof(offerCode));
+            }
+
+            if (String.IsNullOrEmpty(version))
+            {
+                throw new ArgumentNullException(nameof(version));
+            }
+
             this.FormatVersion = formatVersion;
             this.Disclaimer = disclaimer;
             this.OfferCode = offerCode;
@@ -144,6 +166,32 @@ namespace BAMCIS.AWSPriceListApi.Serde
             }
 
             return JsonConvert.DeserializeObject<ProductOffer>(json);
+        }
+        
+        public static ProductOffer FromJsonStream(Stream json)
+        {
+            if (json == null)
+            {
+                throw new ArgumentNullException("json");
+            }
+
+            try
+            {
+                json.Position = 0;
+            }
+            catch { }
+
+            using (StreamReader streamReader = new StreamReader(json))
+            {
+                using (JsonReader reader = new JsonTextReader(streamReader))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+
+                    // read the json from a stream
+                    // json size doesn't matter because only a small piece is read at a time from the HTTP request
+                    return serializer.Deserialize<ProductOffer>(reader);
+                }
+            }
         }
 
         /// <summary>

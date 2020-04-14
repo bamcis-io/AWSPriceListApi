@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Model;
+using Newtonsoft.Json;
 using System;
 
 namespace BAMCIS.AWSPriceListApi.Serde
@@ -20,9 +21,9 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            OfferingClass Class = (OfferingClass)value;
+            OfferingClass offeringClass = (OfferingClass)value;
 
-            switch (Class)
+            switch (offeringClass)
             {
                 case OfferingClass.STANDARD:
                     {

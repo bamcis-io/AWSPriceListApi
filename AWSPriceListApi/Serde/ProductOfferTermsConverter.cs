@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,14 +23,14 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            IReadOnlyDictionary<Term, IReadOnlyDictionary<string, IReadOnlyDictionary<string, PricingTerm>>> Dict = (IReadOnlyDictionary<Term, IReadOnlyDictionary<string, IReadOnlyDictionary<string, PricingTerm>>>)value;
+            IReadOnlyDictionary<Term, IReadOnlyDictionary<string, IReadOnlyDictionary<string, PricingTerm>>> dictionary = (IReadOnlyDictionary<Term, IReadOnlyDictionary<string, IReadOnlyDictionary<string, PricingTerm>>>)value;
 
             writer.WriteStartObject();
 
-            foreach (KeyValuePair<Term, IReadOnlyDictionary<string, IReadOnlyDictionary<string, PricingTerm>>> Item in Dict)
+            foreach (KeyValuePair<Term, IReadOnlyDictionary<string, IReadOnlyDictionary<string, PricingTerm>>> item in dictionary)
             {
-                writer.WritePropertyName(Item.Key.ToString());
-                writer.WriteValue(Item.Value);
+                writer.WritePropertyName(item.Key.ToString());
+                writer.WriteValue(item.Value);
             }
 
             writer.WriteEndObject();
@@ -45,46 +46,45 @@ namespace BAMCIS.AWSPriceListApi.Serde
             // Get the second type of the dictionary, for ProductOffer Terms, the dictionary looks like
             // Dictionary<Term, IDictionary<string, IDictionary<string, PricingTerm>>>, so the type is
             // IDictionary<string, IDictionary<string, PricingTerm>>
-            Type ValueType = objectType.GenericTypeArguments[1];
+            Type valueType = objectType.GenericTypeArguments[1];
 
             // Create a dictionary where the key is a string instead of the Term Enum
-            Type IntermediateDictionaryType = typeof(Dictionary<,>).MakeGenericType(typeof(string), ValueType);
-            IDictionary IntermediateDictionary = (IDictionary)Activator.CreateInstance(IntermediateDictionaryType);
+            IDictionary intermediateDictionary = (IDictionary)Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(typeof(string), valueType));
 
             // Populate the dictionary from the Json, this is what would normally happen,
             // but we will need to take another step to swap the string key for the enum
-            serializer.Populate(reader, IntermediateDictionary);
+            serializer.Populate(reader, intermediateDictionary);
 
             // This is the final dictionary that will be populated
-            var FinalDictionary = (IDictionary)Activator.CreateInstance(objectType);
+            var finalDictionary = (IDictionary)Activator.CreateInstance(objectType);
 
             // Populate the dictionary with the values from the intermediate dictionary
             // and populate the appropriate keys, this should only loop twice, once for
             // OnDemand and then for Reserved
-            foreach (DictionaryEntry pair in IntermediateDictionary)
+            foreach (DictionaryEntry pair in intermediateDictionary)
             {
                 switch (pair.Key.ToString().ToLower())
                 {
                     case "ondemand":
                         {
-                            FinalDictionary.Add(Term.ON_DEMAND, pair.Value);
+                            finalDictionary.Add(Term.ON_DEMAND, pair.Value);
                             break;
                         }
                     case "reserved":
                         {
-                            FinalDictionary.Add(Term.RESERVED, pair.Value);
+                            finalDictionary.Add(Term.RESERVED, pair.Value);
                             break;
                         }
                     default:
                     case "unknown":
                         {
-                            FinalDictionary.Add(Term.UNKNOWN, pair.Value);
+                            finalDictionary.Add(Term.UNKNOWN, pair.Value);
                             break;
                         }
                 }
             }
 
-            return FinalDictionary;
+            return finalDictionary;
         }
 
         public override bool CanConvert(Type objectType)

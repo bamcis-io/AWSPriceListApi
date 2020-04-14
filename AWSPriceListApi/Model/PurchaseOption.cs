@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Serde;
+using Newtonsoft.Json;
 
-namespace BAMCIS.AWSPriceListApi.Serde
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// The different purchase options for AWS pricing terms

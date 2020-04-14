@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Amazon.Runtime;
+using System;
 
 namespace BAMCIS.AWSPriceListApi
 {
     /// <summary>
     /// A request for a specific product price data
     /// </summary>
-    public sealed class GetProductRequest
+    public sealed class GetProductRequest : AmazonWebServiceRequest
     {
         #region Public Properties
 

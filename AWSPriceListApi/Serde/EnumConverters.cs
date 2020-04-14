@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAMCIS.AWSPriceListApi.Model;
+using System;
 using System.Text.RegularExpressions;
 
 namespace BAMCIS.AWSPriceListApi.Serde
@@ -143,20 +144,11 @@ namespace BAMCIS.AWSPriceListApi.Serde
                 return 0;
             }
 
-            Match M = Regex.Match(value, "^([0-9]+).*$");
+            Match match = Regex.Match(value, "^([0-9]+).*$");
 
-            if (M.Success)
+            if (match.Success && Int32.TryParse(match.Groups[1].Value, out int result))
             {
-                string YearsString = M.Groups[1].Value;
-
-                if (Int32.TryParse(YearsString, out int Years))
-                {
-                    return Years;
-                }
-                else
-                {
-                    return 0;
-                }
+                return result;
             }
             else
             {

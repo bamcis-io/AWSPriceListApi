@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -23,7 +24,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JObject Obj = JObject.Load(reader);
+            JObject obj = JObject.Load(reader);
 
             if (reader.TokenType == JsonToken.Null)
             {
@@ -32,41 +33,41 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
             if (reader.TokenType != JsonToken.Null)
             {
-                if (!Obj.HasValues)
+                if (!obj.HasValues)
                 {
                     return new TermAttributes(0, PurchaseOption.ON_DEMAND, OfferingClass.STANDARD);
                 }
             }
 
-            Obj.TryGetValue("LeaseContractLength", StringComparison.OrdinalIgnoreCase, out JToken LeaseToken);
-            Obj.TryGetValue("OfferingClass", StringComparison.OrdinalIgnoreCase, out JToken OfferingClassToken);
-            Obj.TryGetValue("PurchaseOption", StringComparison.OrdinalIgnoreCase, out JToken PurchaseOptionToken);
+            obj.TryGetValue("LeaseContractLength", StringComparison.OrdinalIgnoreCase, out JToken leaseToken);
+            obj.TryGetValue("OfferingClass", StringComparison.OrdinalIgnoreCase, out JToken offeringClassToken);
+            obj.TryGetValue("PurchaseOption", StringComparison.OrdinalIgnoreCase, out JToken purchaseOptionToken);
 
-            OfferingClass Class = OfferingClass.STANDARD;
-            PurchaseOption Option = PurchaseOption.ON_DEMAND;
-            int Lease = 0;
+            OfferingClass offeringClass = OfferingClass.STANDARD;
+            PurchaseOption option = PurchaseOption.ON_DEMAND;
+            int lease = 0;
 
-            if (OfferingClassToken != null)
+            if (offeringClassToken != null)
             {
-                Class = serializer.Deserialize<OfferingClass>(OfferingClassToken.CreateReader());
+                offeringClass = serializer.Deserialize<OfferingClass>(offeringClassToken.CreateReader());
             }
 
-            if (PurchaseOptionToken != null)
+            if (purchaseOptionToken != null)
             {
-                Option = serializer.Deserialize<PurchaseOption>(PurchaseOptionToken.CreateReader());
+                option = serializer.Deserialize<PurchaseOption>(purchaseOptionToken.CreateReader());
             }
 
-            if (LeaseToken != null)
+            if (leaseToken != null)
             {
-                JsonSerializer Serde = new JsonSerializer()
+                JsonSerializer jsonSerializer = new JsonSerializer()
                 {
                     Converters = { new LeaseContractLengthConverter() }
                 };
 
-                Lease = Serde.Deserialize<int>(LeaseToken.CreateReader());
+                lease = jsonSerializer.Deserialize<int>(leaseToken.CreateReader());
             }
 
-            return new TermAttributes(Lease, Option, Class);
+            return new TermAttributes(lease, option, offeringClass);
         }
 
         public override bool CanConvert(Type objectType)

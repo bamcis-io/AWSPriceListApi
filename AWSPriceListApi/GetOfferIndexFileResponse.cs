@@ -1,34 +1,32 @@
-﻿using System;
+﻿using BAMCIS.AWSPriceListApi.Model;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 
 namespace BAMCIS.AWSPriceListApi
 {
     /// <summary>
     /// The response from an offer index file request
     /// </summary>
-    public sealed class GetOfferIndexFileResponse
+    public sealed class GetOfferIndexFileResponse : AWSPriceListApiResponse<OfferIndexFile>
     {
         #region Public Properties
 
         /// <summary>
-        /// The http status code returned by AWS
-        /// </summary>
-        public HttpStatusCode StatusCode { get; }
-
-        /// <summary>
         /// The offer index file data
         /// </summary>
-        public OfferIndexFile OfferIndexFile { get; }
+        public OfferIndexFile OfferIndexFile { 
+            get
+            {
+                return this.Data;
+            }
+        }
 
         /// <summary>
-        /// The reason of any error
+        /// Indicates if the response was provided from the local cache
         /// </summary>
-        public string Reason { get; }
-
-        /// <summary>
-        /// Indicates if an error occured
-        /// </summary>
-        public bool IsError { get; }
+        public bool FromCache { get; }
 
         #endregion
 
@@ -38,24 +36,9 @@ namespace BAMCIS.AWSPriceListApi
         /// Creates a new offer index file response
         /// </summary>
         /// <param name="file"></param>
-        internal GetOfferIndexFileResponse(OfferIndexFile file, HttpStatusCode statusCode = HttpStatusCode.OK)
+        internal GetOfferIndexFileResponse(HttpResponseMessage response) : base(response)
         {
-            this.OfferIndexFile = file ?? throw new ArgumentNullException("file");
-            this.StatusCode = statusCode;
-            this.Reason = String.Empty;
-            this.IsError = false;
-        }
-
-        /// <summary>
-        /// Creates a response that was due to an error
-        /// </summary>
-        /// <param name="statusCode"></param>
-        internal GetOfferIndexFileResponse(string reason, HttpStatusCode statusCode)
-        {
-            this.StatusCode = statusCode;
-            this.Reason = reason;
-            this.IsError = true;
-            this.OfferIndexFile = null;
+            this.FromCache = false;
         }
 
         #endregion

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 
-namespace BAMCIS.AWSPriceListApi
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// Contains information about exceptions that occur when
@@ -32,7 +32,9 @@ namespace BAMCIS.AWSPriceListApi
         #region Constructors
 
         public PriceListException(string message) : base(message)
-        { }
+        {
+            this.Reason = message;
+        }
 
         public PriceListException(string message, HttpStatusCode statusCode) : this(message)
         {
@@ -41,11 +43,18 @@ namespace BAMCIS.AWSPriceListApi
 
         public PriceListException(string message, Exception innerException) : base(message, innerException)
         {
+            this.Reason = message;
         }
 
         public PriceListException(string message, Exception innerException, HttpStatusCode statusCode) : this(message, innerException)
         {
             this.StatusCode = statusCode;
+        }
+
+        public PriceListException(HttpResponseMessage response, string message) : this(message)
+        {
+            this.Reason = response.ReasonPhrase;
+            this.Request = response.RequestMessage;
         }
 
         #endregion

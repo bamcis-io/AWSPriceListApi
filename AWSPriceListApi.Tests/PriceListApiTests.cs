@@ -1,4 +1,5 @@
 using BAMCIS.AWSPriceListApi;
+using BAMCIS.AWSPriceListApi.Model;
 using BAMCIS.AWSPriceListApi.Serde;
 using System;
 using System.Collections.Concurrent;
@@ -16,284 +17,325 @@ namespace AWSPriceListApi.Tests
     public class PriceListApiTests
     {
         [Fact]
-        public async Task TestElastiCache()
+        public async Task TestGetProduct_ElastiCache_SingleSkuFromOffer()
         {
             // ARRANGE
-            string Sku = "HBRQZSXXSY2DXJ77";
+            string sku = "HBRQZSXXSY2DXJ77";
 
-            PriceListClient Client = new PriceListClient();
+            PriceListClient client = new PriceListClient();
 
-            GetProductRequest Request = new GetProductRequest("AmazonElastiCache")
+            GetProductRequest request = new GetProductRequest("AmazonElastiCache")
             {
                 Format = Format.JSON
             };
 
-            GetProductResponse Response = await Client.GetProductAsync(Request);
-
-            ProductOffer ECOffer = ProductOffer.FromJson(Response.GetProductInfoAsString());
+            GetProductResponse response = await client.GetProductAsync(request);
+            ProductOffer ecOffer = response.ProductOffer;
 
             // ACT
 
-            IEnumerable<IGrouping<string, PricingTerm>> GroupedTerms = ECOffer.Terms
+            IEnumerable<IGrouping<string, PricingTerm>> groupedTerms = ecOffer.Terms
                 .SelectMany(x => x.Value) // Get all of the product item dictionaries from on demand and reserved
                                           //.Where(x => ApplicableProductSkus.Contains(x.Key)) // Only get the pricing terms for products we care about
                 .SelectMany(x => x.Value) // Get all of the pricing term key value pairs
                 .Select(x => x.Value) // Get just the pricing terms
                 .GroupBy(x => x.Sku); // Put all of the same skus together
 
-            IGrouping<string, PricingTerm> SkuTerms = GroupedTerms.First(x => x.Key.Equals(Sku));
+            IGrouping<string, PricingTerm> skuTerms = groupedTerms.First(x => x.Key.Equals(sku));
 
             // ASSERT
-            Assert.True(SkuTerms.Where(x => x.TermAttributes.PurchaseOption == PurchaseOption.ON_DEMAND).Count() == 1);
+            Assert.True(skuTerms.Where(x => x.TermAttributes.PurchaseOption == PurchaseOption.ON_DEMAND).Count() == 1);
         }
 
         [Fact]
-        public void TestEC2ReservedHost()
+        public async Task TestGetProduct_EC2()
         {
             // ARRANGE
-            string Sku = "R788QK3FA3RPDDXZ";
+            PriceListClient client = new PriceListClient();
 
-            string Json = File.ReadAllText("ReservedHostEC2.json");
+            GetProductRequest request = new GetProductRequest("AmazonEC2")
+            {
+                Format = Format.JSON
+            };
 
-            ProductOffer ECOffer = ProductOffer.FromJson(Json);
+            // ACT
+            GetProductResponse response = await client.GetProductAsync(request);
+
+            ProductOffer ec2Offer = response.ProductOffer;
+
+            // ASSERT
+            Assert.NotNull(ec2Offer);
+        }
+
+        [Fact]
+        public async Task TestGetProduct_ECS_FromJsonContentStream()
+        {
+            // ARRANGE
+            PriceListClient client = new PriceListClient();
+
+            GetProductRequest request = new GetProductRequest("AmazonECS")
+            {
+                Format = Format.JSON
+            };
+
+            // ACT
+            GetProductResponse response = await client.GetProductAsync(request);
+
+            ProductOffer offer = ProductOffer.FromJsonStream(response.Content);
+
+            // ASSERT
+            Assert.NotNull(offer);
+        }
+
+        [Fact]
+        public async Task TestGetProduct_ECS_FromJsonString()
+        {
+            // ARRANGE
+            PriceListClient client = new PriceListClient();
+
+            GetProductRequest request = new GetProductRequest("AmazonECS")
+            {
+                Format = Format.JSON
+            };
+
+            // ACT
+            GetProductResponse response = await client.GetProductAsync(request);
+
+            bool success = response.TryGetResponseContentAsString(out string productInfo);
+
+            // ASSERT
+            Assert.True(success);
+
+            ProductOffer offer = ProductOffer.FromJson(productInfo);
+
+            Assert.NotNull(offer);
+        }
+
+        [Fact]
+        public void TestGetProduct_EC2ReservedHost_FromJsonFile()
+        {
+            // ARRANGE
+            string sku = "R788QK3FA3RPDDXZ";
+
+            string json = File.ReadAllText("ReservedHostEC2.json");
+
+            ProductOffer ec2Offer = ProductOffer.FromJson(json);
 
             // ACT
 
-            IEnumerable<IGrouping<string, PricingTerm>> GroupedTerms = ECOffer.Terms
+            IEnumerable<IGrouping<string, PricingTerm>> groupedTerms = ec2Offer.Terms
                 .SelectMany(x => x.Value) // Get all of the product item dictionaries from on demand and reserved
                                           //.Where(x => ApplicableProductSkus.Contains(x.Key)) // Only get the pricing terms for products we care about
                 .SelectMany(x => x.Value) // Get all of the pricing term key value pairs
                 .Select(x => x.Value) // Get just the pricing terms
                 .GroupBy(x => x.Sku); // Put all of the same skus together
 
-            IGrouping<string, PricingTerm> SkuTerms = GroupedTerms.First(x => x.Key.Equals(Sku));
+            IGrouping<string, PricingTerm> skuTerms = groupedTerms.First(x => x.Key.Equals(sku));
 
             // ASSERT
-            Assert.True(SkuTerms.Where(x => x.TermAttributes.PurchaseOption == PurchaseOption.ON_DEMAND).Count() == 0);
+            Assert.True(skuTerms.Where(x => x.TermAttributes.PurchaseOption == PurchaseOption.ON_DEMAND).Count() == 0);
         }
 
         [Fact]
-        public async Task ParseJsonTest()
+        public async Task TestGetProduct_AmazonDynamoDB_FromJsonContentStream()
         {
             // ARRANGE
-            PriceListClient Client = new PriceListClient();
+            PriceListClient client = new PriceListClient();
 
-            GetProductRequest Request = new GetProductRequest("AmazonDynamoDB")
+            GetProductRequest request = new GetProductRequest("AmazonDynamoDB")
             {
                 Format = Format.JSON
             };
 
-            GetProductResponse Response = await Client.GetProductAsync(Request);
+            GetProductResponse response = await client.GetProductAsync(request);
 
             // ACT
-            ProductOffer DDBOffer = ProductOffer.FromJson(Response.GetProductInfoAsString());
+            ProductOffer ddbOffer = ProductOffer.FromJsonStream(response.Content);
 
             // ASSERT
-            Assert.True(!String.IsNullOrEmpty(DDBOffer.Version));
+            Assert.NotNull(ddbOffer);
+            Assert.True(!String.IsNullOrEmpty(ddbOffer.Version));
         }
 
         [Fact]
-        public void FromJsonTest()
+        public void TestGetProduct_AmazonRedshift_FromJsonFile()
         {
             // ARRANGE
-            using (FileStream Stream = File.OpenRead("index.json"))
+            using (FileStream stream = File.OpenRead("AmazonRedshift.json"))
             {
-                byte[] Bytes = new byte[Stream.Length];
+                byte[] bytes = new byte[stream.Length];
 
-                Stream.Read(Bytes, 0, Bytes.Length);
+                stream.Read(bytes, 0, bytes.Length);
 
-                string Json = Encoding.UTF8.GetString(Bytes);
+                string json = Encoding.UTF8.GetString(bytes);
 
                 // ACT
-                ProductOffer Offer = ProductOffer.FromJson(Json);
+                ProductOffer offer = ProductOffer.FromJson(json);
 
                 // ASSERT
-                Assert.NotNull(Offer);
+                Assert.NotNull(offer);
             }
         }
 
         [Fact]
-        public async Task ListServicesTest()
+        public async Task TestListServices()
         {
             // ARRANGE
-            PriceListClient Client = new PriceListClient();
+            PriceListClient client = new PriceListClient();
 
             // ACT
-            ListServicesResponse Services = await Client.ListServicesAsync();
+            ListServicesResponse services = await client.ListServicesAsync();
 
             // ASSERT
-            Assert.True(!Services.IsError);
-            Assert.True(Services.Services.Any());
+            Assert.True(!services.IsError());
+            Assert.True(services.Services.Any());
         }
 
         [Fact]
-        public async Task PrictListProductTestCsv()
+        public async Task TestGetProduct_AmazonRDS_CSV()
         {
             // ARRANGE
-            PriceListClientConfig Config = new PriceListClientConfig();
+            PriceListClientConfig config = new PriceListClientConfig();
 
-            PriceListClient Client = new PriceListClient(Config);
+            PriceListClient client = new PriceListClient(config);
 
-            GetProductRequest Request = new GetProductRequest("AmazonRDS")
+            GetProductRequest request = new GetProductRequest("AmazonRDS")
             {
                 Format = Format.CSV
             };
 
             // ACT
-            GetProductResponse Response = await Client.GetProductAsync(Request);
+            GetProductResponse response = await client.GetProductAsync(request);
 
             // ASSERT
-            Assert.True(!String.IsNullOrEmpty(Response.ServiceCode));
+            Assert.True(!String.IsNullOrEmpty(response.ServiceCode));
         }
 
         [Fact]
-        public async Task PrictListProductTest()
+        public async Task TestGetProduct_AmazonRDS()
         {
             // ARRANGE
-            PriceListClient Client = new PriceListClient();
-            GetProductRequest Request = new GetProductRequest("AmazonRDS");
+            PriceListClient client = new PriceListClient();
+            GetProductRequest request = new GetProductRequest("AmazonRDS");
 
             // ACT
-            GetProductResponse Response = await Client.GetProductAsync(Request);
+            GetProductResponse response = await client.GetProductAsync(request);
 
             // ASSERT
-            Assert.True(!Response.IsError);
-            Assert.True(!String.IsNullOrEmpty(Response.ServiceCode));
+            Assert.True(!response.IsError());
+            Assert.True(!String.IsNullOrEmpty(response.ServiceCode));
         }
 
         [Fact]
-        public async Task PriceListClientTest()
+        public async Task TestGetOfferIndexFile_WithoutRequest()
         {
             // ARRANGE
-            PriceListClient Client = new PriceListClient();
+            PriceListClient client = new PriceListClient();
 
             // ACT
-            GetOfferIndexFileResponse Response = await Client.GetOfferIndexFileAsync();
+            GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync();
 
             // ASSERT
-            Assert.True(!Response.IsError);
-            Assert.NotNull(Response.OfferIndexFile);
+            Assert.True(!response.IsError());
+            Assert.NotNull(response.OfferIndexFile);
         }
 
         [Fact]
-        public async Task PriceListClientTest2()
+        public async Task TestGetOfferIndexFile_WithRequest()
         {
             // ARRANGE
-            PriceListClient Client = new PriceListClient();
-            GetOfferIndexFileRequest Request = new GetOfferIndexFileRequest("/offers/v1.0/aws/index.json");
+            PriceListClient client = new PriceListClient();
+            GetOfferIndexFileRequest request = new GetOfferIndexFileRequest("/offers/v1.0/aws/index.json");
 
             // ACT
-            GetOfferIndexFileResponse Response = await Client.GetOfferIndexFileAsync(Request);
+            GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync(request);
 
             // ASSERT
-            Assert.True(!Response.IsError);
-            Assert.NotNull(Response.OfferIndexFile);
+            Assert.True(!response.IsError());
+            Assert.NotNull(response.OfferIndexFile);
         }
 
         [Fact]
-        public async Task OfferIndexFileTest()
+        public async Task TestGetRegionIndexFile_AllServices()
         {
             // ARRANGE
+            PriceListClient client = new PriceListClient();
+            GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync();
+            ConcurrentBag<RegionIndex> indices = new ConcurrentBag<RegionIndex>();
 
             // ACT
-            OfferIndexFile File = await OfferIndexFile.GetAsync();
-
-            // ASSERT
-            Assert.NotNull(File);
-        }
-
-        [Fact]
-        public async Task RegionIndexFileTest()
-        {
-            // ARRANGE
-            OfferIndexFile File = await OfferIndexFile.GetAsync();
-            ConcurrentBag<RegionIndex> Indexes = new ConcurrentBag<RegionIndex>();
-
-            // ACT
-            IEnumerable<Task> Tasks = File.Offers.Select(async x =>
+            IEnumerable<Task> tasks = response.OfferIndexFile.Offers.Select(async x =>
             {
-                int n = 0;
-
-                while (true)
+                GetRegionIndexResponse regionIndexResponse = await client.GetRegionIndexAsync(new GetRegionIndexRequest(x.Value));
+                if (regionIndexResponse != null && regionIndexResponse.RegionIndex != null)
                 {
-                    try
-                    {
-                        RegionIndex Index = await x.Value.GetRegionIndexAsync();
-                        if (Index != null)
-                        {
-                            Indexes.Add(Index);
-                        }
-                        
-                        break;
-                    }
-                    catch (HttpRequestException e)
-                    {
-                        if (n < 5)
-                        {
-                            Thread.Sleep((n++ * 1000) + 500);
-                        }
-                        else
-                        {
-                            throw e;
-                        }
-
-                    }
+                    indices.Add(regionIndexResponse.RegionIndex);
                 }
             });
 
-            await Task.WhenAll(Tasks);
+            await Task.WhenAll(tasks);
 
             // ASSERT
-            Assert.Equal(File.Offers.Where(x => !String.IsNullOrEmpty(x.Value.CurrentRegionIndexUrl)).Count(), Indexes.Count);
-
-            foreach (RegionIndex Index in Indexes)
-            {
-                Assert.NotNull(Index);
-            }
+            Assert.Equal(response.OfferIndexFile.Offers.Where(x => !String.IsNullOrEmpty(x.Value.CurrentRegionIndexUrl)).Count(), indices.Count);
+            Assert.All(indices, x => Assert.NotNull(x));
         }
 
         [Fact]
-        public async Task VersionIndexFileTest()
+        public async Task TestGetVersionIndexFile_AllServices()
         {
             // ARRANGE
-            OfferIndexFile File = await OfferIndexFile.GetAsync();
-            ConcurrentBag<VersionIndex> Indexes = new ConcurrentBag<VersionIndex>();
+            PriceListClient client = new PriceListClient();
+            GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync();
+            ConcurrentBag<VersionIndex> indices = new ConcurrentBag<VersionIndex>();
 
             // ACT
-            IEnumerable<Task> Tasks = File.Offers.Select(async x =>
+            IEnumerable<Task> tasks = response.OfferIndexFile.Offers.Select(async x =>
             {
-                int n = 0;
-                while (true)
+                GetVersionIndexResponse versionIndexResponse = await client.GetVersionIndexAsync(new GetVersionIndexRequest(x.Value));
+
+                if (versionIndexResponse != null && versionIndexResponse.VersionIndex != null)
                 {
-                    try
-                    {
-                        VersionIndex Index = await x.Value.GetVersionIndexAsync();
-                        Indexes.Add(Index);
-                        break;
-                    }
-                    catch (HttpRequestException e)
-                    {
-                        if (n < 5)
-                        {
-                            Thread.Sleep((1000 * n++) + 500);
-                        }
-                        else
-                        {
-                            throw e;
-                        }
-                    }
+                    indices.Add(versionIndexResponse.VersionIndex);
                 }
             });
 
-            await Task.WhenAll(Tasks);
+            await Task.WhenAll(tasks);
 
             // ASSERT
-            Assert.Equal(File.Offers.Where(x => !String.IsNullOrEmpty(x.Value.VersionIndexUrl)).Count(), Indexes.Count);
+            Assert.Equal(response.OfferIndexFile.Offers.Where(x => !String.IsNullOrEmpty(x.Value.VersionIndexUrl)).Count(), indices.Count);
+            Assert.All(indices, x => Assert.NotNull(x));
+        }
 
-            foreach (VersionIndex Index in Indexes)
-            {
-                Assert.NotNull(Index);
-            }
+        [Fact]
+        public async Task TestGetVerionIndexFile_AmazonEC2_WithRelativePath()
+        {
+            // ARRANGE
+            PriceListClient client = new PriceListClient();
+            GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync();
+
+            string versionIndexUrl = response.OfferIndexFile.Offers["AmazonEC2"].VersionIndexUrl;
+
+            // ACT
+            GetVersionIndexResponse versionResponse = await client.GetVersionIndexAsync(new GetVersionIndexRequest(versionIndexUrl));
+
+            // ASSERT
+            Assert.Equal(200, (int)versionResponse.HttpStatusCode);
+        }
+
+        [Fact]
+        public async Task TestGetVerionIndexFile_AmazonEC2_WithOffer()
+        {
+            // ARRANGE
+            PriceListClient client = new PriceListClient();
+            GetOfferIndexFileResponse response = await client.GetOfferIndexFileAsync();
+
+            Offer offer = response.OfferIndexFile.Offers["AmazonEC2"];
+
+            // ACT
+            GetVersionIndexResponse versionResponse = await client.GetVersionIndexAsync(new GetVersionIndexRequest(offer));
+
+            // ASSERT
+            Assert.Equal(200, (int)versionResponse.HttpStatusCode);
         }
     }
 }

@@ -8,7 +8,7 @@
     <Authors>Michael Haken</Authors>
     <Company>bamcis.io</Company>
     <Description>Provides implementations for the AWS Price List API.</Description>
-    <PackageTags>AWS PriceList Lambda</PackageTags>
+    <PackageTags>AWS PriceList</PackageTags>
     <RepositoryType>Git</RepositoryType>
     <PackageProjectUrl>https://github.com/bamcis-io/AWSPriceListApi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/bamcis-io/AWSPriceListApi</RepositoryUrl>
@@ -16,24 +16,23 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.0.0</Version>
-    <PackageReleaseNotes>To prevent unnecessary memory utilization the response data is maintained as a stream instead of being read as a string by default. This allows you to read or copy the stream to another stream to perform csv or json operations.</PackageReleaseNotes>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>5.0.0</Version>
+    <PackageReleaseNotes>Added new functionality for processing the product offer file via streams and added Savings Plan support.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AWSPriceListApi.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <None Remove="GetProductResponse.cs~RF285355ae.TMP" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <PackageReference Include="AWSSDK.Core" Version="3.3.106.4" />
+    <PackageReference Include="ExponentialBackoffAndRetry" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
 </Project>

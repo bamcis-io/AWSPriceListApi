@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Amazon.Runtime;
+using Amazon.Util.Internal;
+using System;
 using System.Text;
 
 namespace BAMCIS.AWSPriceListApi
 {
-    public sealed class PriceListClientConfig
+    public sealed class PriceListClientConfig : ClientConfig
     {
         #region Private Fields
 
-        internal static readonly Uri _PriceListBaseUrlDefault = new Uri("https://pricing.us-east-1.amazonaws.com");
+        private static readonly string UserAgentString = InternalSDKUtils.BuildUserAgentString("2.0.1");
+        internal static readonly Uri PRICE_LIST_DEFAULT_URL = new Uri("https://pricing.us-east-1.amazonaws.com");
 
         #endregion
 
@@ -25,6 +28,30 @@ namespace BAMCIS.AWSPriceListApi
         /// </summary>
         public bool NoCache { get; set; }
 
+        public override string ServiceVersion
+        {
+            get
+            {
+                return "2020-04-13";
+            }
+        }
+
+        public override string UserAgent
+        {
+            get
+            {
+                return PriceListClientConfig.UserAgentString;
+            }
+        }
+
+        public override string RegionEndpointServiceName
+        {
+            get
+            {
+                return "api.pricing";
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -34,12 +61,12 @@ namespace BAMCIS.AWSPriceListApi
         /// </summary>
         public PriceListClientConfig()
         {
-            this.PriceListBaseUrl = _PriceListBaseUrlDefault;
+            this.PriceListBaseUrl = PRICE_LIST_DEFAULT_URL;
         }
 
         #endregion
 
-        #region Public Methods
+        #region Internal Methods
 
         internal string GetBaseUrlString()
         {
@@ -48,15 +75,15 @@ namespace BAMCIS.AWSPriceListApi
 
         internal static string GetBaseUrlString(Uri baseUrl)
         {
-            StringBuilder Base = new StringBuilder($"{baseUrl.Scheme}://{baseUrl.DnsSafeHost}");
+            StringBuilder buffer = new StringBuilder($"{baseUrl.Scheme}://{baseUrl.DnsSafeHost}");
 
             if (baseUrl.Scheme == "http" && baseUrl.Port != 80 ||
                 baseUrl.Scheme == "https" && baseUrl.Port != 443)
             {
-                Base.Append($":{baseUrl.Port}");
+                buffer.Append($":{baseUrl.Port}");
             }
 
-            return Base.ToString();
+            return buffer.ToString();
         }
 
         #endregion

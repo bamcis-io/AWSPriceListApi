@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Text.RegularExpressions;
 
 namespace BAMCIS.AWSPriceListApi.Serde
 {
@@ -21,9 +20,8 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            Int32 Length = (Int32)value;
-
-            writer.WriteValue($"{Length}yr");
+            int length = (int)value;
+            writer.WriteValue($"{length}yr");
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -33,7 +31,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
 
         public override bool CanConvert(Type objectType)
         {
-            return (objectType) == typeof(Int32);
+            return (objectType) == typeof(int);
         }
 
         #endregion

@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Serde;
+using Newtonsoft.Json;
 
-namespace BAMCIS.AWSPriceListApi.Serde
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// The terms for which something can be purchased from AWS, either RESERVED capacity or ON DEMAND

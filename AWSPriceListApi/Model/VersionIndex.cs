@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace BAMCIS.AWSPriceListApi
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// An index of the available versions of the price data
@@ -47,22 +46,22 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (String.IsNullOrEmpty(formatVersion))
             {
-                throw new ArgumentNullException("formatVersion");
+                throw new ArgumentNullException(nameof(formatVersion));
             }
 
             if (String.IsNullOrEmpty(disclaimer))
             {
-                throw new ArgumentNullException("disclaimer");
+                throw new ArgumentNullException(nameof(disclaimer));
             }
 
             if (String.IsNullOrEmpty(offerCode))
             {
-                throw new ArgumentNullException("offerCode");
+                throw new ArgumentNullException(nameof(offerCode));
             }
 
             if (String.IsNullOrEmpty(currentVersion))
             {
-                throw new ArgumentNullException("currentVersion");
+                throw new ArgumentNullException(nameof(currentVersion));
             }
 
             this.FormatVersion = formatVersion;
@@ -70,7 +69,7 @@ namespace BAMCIS.AWSPriceListApi
             this.PublicationDate = publicationDate;
             this.OfferCode = offerCode;
             this.CurrentVersion = currentVersion;
-            this.Versions = versions ?? throw new ArgumentNullException("versions");
+            this.Versions = versions ?? throw new ArgumentNullException(nameof(versions));
         }
 
         #endregion

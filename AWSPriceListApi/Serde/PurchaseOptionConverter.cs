@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Model;
+using Newtonsoft.Json;
 using System;
 
 namespace BAMCIS.AWSPriceListApi.Serde

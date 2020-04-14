@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace BAMCIS.AWSPriceListApi
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// Represents an individual version data
     /// </summary>
-    public sealed class VersionData
+    public class VersionData
     {
         #region Public Properties
 
@@ -31,7 +31,7 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (String.IsNullOrEmpty(offerVersionUrl))
             {
-                throw new ArgumentNullException("offerVersionUrl");
+                throw new ArgumentNullException(nameof(offerVersionUrl));
             }
 
             this.VersionEffectiveBeginDate = versionEffectiveBeginDate;

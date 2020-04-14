@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using BAMCIS.AWSPriceListApi.Serde;
+using Newtonsoft.Json;
 using System;
 
-namespace BAMCIS.AWSPriceListApi.Serde
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// A common set of pricing term attributes for a pricing term
@@ -15,7 +16,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
         /// The lease contract length, i.e. the length of a reserved instance purchase
         /// </summary>
         [JsonConverter(typeof(LeaseContractLengthConverter))]
-        public Int32 LeaseContractLength { get; }
+        public int LeaseContractLength { get; }
 
         /// <summary>
         /// The purchase option for the resource, OnDemand, Reserved, or Unknown
@@ -56,7 +57,7 @@ namespace BAMCIS.AWSPriceListApi.Serde
         {
             if (leaseContractLength < 0)
             {
-                throw new ArgumentOutOfRangeException("leaseContractLength", "The lease contract length cannot be less than zero.");
+                throw new ArgumentOutOfRangeException(nameof(leaseContractLength), "The lease contract length cannot be less than zero.");
             }
 
             this.LeaseContractLength = leaseContractLength;

@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace BAMCIS.AWSPriceListApi
+namespace BAMCIS.AWSPriceListApi.Model
 {
     /// <summary>
     /// The data for a specific region
     /// </summary>
-    public sealed class RegionData
+    public class RegionData
     {
         #region Public Properties
 
@@ -34,12 +34,12 @@ namespace BAMCIS.AWSPriceListApi
         {
             if (String.IsNullOrEmpty(regionCode))
             {
-                throw new ArgumentNullException("regionCode");
+                throw new ArgumentNullException(nameof(regionCode));
             }
 
             if (String.IsNullOrEmpty(currentVersionUrl))
             {
-                throw new ArgumentNullException("currentVersionUrl");
+                throw new ArgumentNullException(nameof(currentVersionUrl));
             }
 
             this.RegionCode = regionCode;
