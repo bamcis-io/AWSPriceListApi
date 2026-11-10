@@ -31,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.Core" Version="3.3.106.4" />
     <PackageReference Include="ExponentialBackoffAndRetry" Version="2.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
