@@ -1,3 +1,5 @@
+This project has been archived and is no longer actively maintained.
+
 # BAMCIS AWS Price List API
 This project is a convenience wrapper around the AWS Price List API. It uses the publicly available endpoint by default to retrieve the offer index files and the specific service offer files the offer index file points to. You can also retrieve the version index file and region index file in case you want to get the URLs for those specific offer files.
 
